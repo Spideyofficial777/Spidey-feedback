@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Join Our Channels - {{ config.APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Header -->
+    <div class="text-center mb-12">
+        <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16c-.169 1.858-.896 6.728-.896 6.728-.302 1.507-1.123 1.777-1.123 1.777s-.651.114-1.393-.568c-.742-.681-1.429-1.278-1.429-1.278-.651-.519-1.331-1.279-1.331-1.279-.378-.284-.682-.546-.682-.546s-.263-.213-.263-.546c0-.332.186-.568.186-.568s.332-.213.568-.213.48.099.48.099.048-.071.165-.071.213.028.213.28-.165.451-.165.451-.28.332-.28.569c0 .236.236.378.236.378s.451.165.688-.094c.236-.26.402-.688.402-.688s.283-.378.378-.615c.094-.236.07-.52.07-.52s-.071-.284-.284-.284-.426.071-.426.284c0 .213.142.497.142.497s-.213.284-.426.284-.473-.142-.473-.426c0-.284.189-.568.473-.568s.568.189.568.473-.189.568-.473.568z"/>
+            </svg>
+        </div>
+        
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Join Our Channels</h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Stay connected with us through our official Telegram channels. Get updates, support, and be part of our community.
+        </p>
+    </div>
+
+    <!-- Channels List -->
+    {% if channels %}
+        <div class="space-y-6">
+            {% for channel in channels %}
+                <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ channel.name }}</h3>
+                            {% if channel.description %}
+                                <p class="text-gray-600 mb-4 sm:mb-0">{{ channel.description }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="flex-shrink-0">
+                            <a href="{{ channel.link }}" target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors duration-200">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16c-.169 1.858-.896 6.728-.896 6.728-.302 1.507-1.123 1.777-1.123 1.777s-.651.114-1.393-.568c-.742-.681-1.429-1.278-1.429-1.278-.651-.519-1.331-1.279-1.331-1.279-.378-.284-.682-.546-.682-.546s-.263-.213-.263-.546c0-.332.186-.568.186-.568s.332-.213.568-.213.48.099.48.099.048-.071.165-.071.213.028.213.28-.165.451-.165.451-.28.332-.28.569c0 .236.236.378.236.378s.451.165.688-.094c.236-.26.402-.688.402-.688s.283-.378.378-.615c.094-.236.07-.52.07-.52s-.071-.284-.284-.284-.426.071-.426.284c0 .213.142.497.142.497s-.213.284-.426.284-.473-.142-.473-.426c0-.284.189-.568.473-.568s.568.189.568.473-.189.568-.473.568z"/>
+                                </svg>
+                                <span>Join Channel</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-12">
+            <div class="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-6 flex items-center justify-center">
+                <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h8V4a2 2 0 012 2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-medium text-gray-900 mb-2">No channels available yet</h3>
+            <p class="text-gray-600">Check back later for our official channels!</p>
+        </div>
+    {% endif %}
+
+    <!-- Call to Action -->
+    <div class="mt-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-center text-white">
+        <h3 class="text-2xl font-bold mb-4">Stay Connected</h3>
+        <p class="text-blue-100 mb-6">
+            Join our channels to get the latest updates, participate in discussions, and connect with our community.
+        </p>
+        <a href="{{ url_for('feedback.submit') }}" 
+           class="inline-flex items-center space-x-2 bg-white text-blue-600 px-6 py-3 rounded-xl font-medium hover:bg-gray-100 transition-colors duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            <span>Send us Feedback</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Access OTP - {{ app_name }}</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; background-color: #f8fafc; }
+        .container { max-width: 600px; margin: 0 auto; background-color: white; }
+        .header { background: linear-gradient(135deg, #7c3aed 0%, #c026d3 100%); padding: 40px 30px; text-align: center; }
+        .header h1 { color: white; margin: 0; font-size: 28px; font-weight: bold; }
+        .content { padding: 40px 30px; }
+        .otp-box { background-color: #faf5ff; padding: 30px; text-align: center; border-radius: 12px; margin: 30px 0; border: 2px solid #c084fc; }
+        .otp-code { font-size: 36px; font-weight: bold; color: #581c87; letter-spacing: 8px; margin: 10px 0; }
+        .warning-box { background-color: #fef3c7; padding: 20px; border-radius: 12px; margin: 20px 0; border-left: 4px solid #f59e0b; }
+        .footer { background-color: #1e293b; color: #94a3b8; padding: 30px; text-align: center; }
+        .text-center { text-align: center; }
+        .text-gray { color: #64748b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Admin Access OTP</h1>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <h2>Admin Login Verification</h2>
+            <p>Someone is attempting to access the admin panel. Use the code below to complete the login process:</p>
+            
+            <!-- OTP Box -->
+            <div class="otp-box">
+                <p class="text-gray">Your admin OTP is:</p>
+                <div class="otp-code">{{ otp }}</div>
+                <p class="text-gray">This code will expire in 10 minutes.</p>
+            </div>
+            
+            <!-- Security Warning -->
+            <div class="warning-box">
+                <h3 style="margin-top: 0; color: #92400e;">🔒 Security Notice</h3>
+                <p style="margin-bottom: 0; color: #92400e;">
+                    If you didn't attempt to login to the admin panel, please ignore this email and consider changing your password immediately.
+                </p>
+            </div>
+            
+            <p>For security reasons, never share this code with anyone. Our team will never ask for your OTP over email or phone.</p>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 {{ app_name }}. All rights reserved.</p>
+            <p>This email was sent for admin authentication security.</p>
+        </div>
+    </div>
+</body>
+</html>

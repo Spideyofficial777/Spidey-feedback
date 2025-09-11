@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reply to Your Feedback - {{ app_name }}</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; background-color: #f8fafc; }
+        .container { max-width: 600px; margin: 0 auto; background-color: white; }
+        .header { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); padding: 40px 30px; text-align: center; }
+        .header h1 { color: white; margin: 0; font-size: 28px; font-weight: bold; }
+        .content { padding: 40px 30px; }
+        .reply-box { background-color: #f8fafc; padding: 20px; border-radius: 12px; margin: 30px 0; border-left: 4px solid #8b5cf6; }
+        .original-feedback { background-color: #f1f5f9; padding: 20px; border-radius: 12px; margin: 20px 0; }
+        .button { display: inline-block; background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; margin: 20px 0; }
+        .footer { background-color: #1e293b; color: #94a3b8; padding: 30px; text-align: center; }
+        .text-center { text-align: center; }
+        .text-gray { color: #64748b; }
+        .stars { color: #fbbf24; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>We've Responded!</h1>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <h2>Hi {{ name }},</h2>
+            <p>Thank you for your feedback! We've reviewed your submission and have a response for you:</p>
+            
+            <!-- Reply Box -->
+            <div class="reply-box">
+                <h3 style="margin-top: 0; color: #6b21a8;">Our Response:</h3>
+                <p style="margin-bottom: 0; line-height: 1.6;">{{ reply }}</p>
+            </div>
+            
+            <!-- Original Feedback -->
+            <div class="original-feedback">
+                <h4 style="margin-top: 0; color: #374151;">Your Original Feedback:</h4>
+                <p style="margin-bottom: 8px;"><strong>Message:</strong> {{ feedback.message }}</p>
+                {% if feedback.rating %}
+                    <p style="margin-bottom: 8px;"><strong>Rating:</strong> 
+                        <span class="stars">
+                            {% for i in range(feedback.rating) %}★{% endfor %}
+                        </span>
+                        ({{ feedback.rating }}/5)
+                    </p>
+                {% endif %}
+                <p style="margin-bottom: 0; color: #6b7280; font-size: 14px;"><strong>Submitted:</strong> {{ feedback.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                <p style="margin-bottom: 0; color: #6b7280; font-size: 14px;"><strong>Reference:</strong> #{{ feedback.id }}</p>
+            </div>
+            
+            <p>If you have any follow-up questions or additional feedback, please don't hesitate to reach out to us again.</p>
+            
+            <div class="text-center">
+                <a href="{{ app_url }}/feedback/submit" class="button">Send More Feedback</a>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 {{ app_name }}. All rights reserved.</p>
+            <p>Thank you for helping us improve our services!</p>
+        </div>
+    </div>
+</body>
+</html>

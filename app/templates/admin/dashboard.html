@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - {{ config.APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+                <p class="text-gray-600 mt-1">Welcome back, {{ current_user.username }}!</p>
+            </div>
+            <div class="flex space-x-4">
+                <a href="{{ url_for('admin.feedback_list') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                    View All Feedback
+                </a>
+                <a href="{{ url_for('admin.admin_logout') }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center">
+                <div class="p-2 bg-blue-100 rounded-lg">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Feedback</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_feedback }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center">
+                <div class="p-2 bg-yellow-100 rounded-lg">
+                    <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">New Feedback</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ new_feedback }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center">
+                <div class="p-2 bg-green-100 rounded-lg">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Users</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_users }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center">
+                <div class="p-2 bg-purple-100 rounded-lg">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Avg Rating</p>
+                    <p class="text-2xl font-bold text-gray-900">
+                        {% set total_ratings = rating_stats.values() | sum %}
+                        {% if total_ratings > 0 %}
+                            {% set weighted_sum = (rating_stats[1] * 1 + rating_stats[2] * 2 + rating_stats[3] * 3 + rating_stats[4] * 4 + rating_stats[5] * 5) %}
+                            {{ "%.1f"|format(weighted_sum / total_ratings) }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <!-- Recent Feedback -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-lg font-semibold text-gray-900">Recent Feedback</h2>
+                        <a href="{{ url_for('admin.feedback_list') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            View All
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    {% if recent_feedback %}
+                        <div class="space-y-4">
+                            {% for feedback in recent_feedback %}
+                                <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center space-x-2 mb-2">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                                    {% if feedback.status == 'new' %}bg-yellow-100 text-yellow-800
+                                                    {% elif feedback.status == 'reading' %}bg-blue-100 text-blue-800
+                                                    {% elif feedback.status == 'responded' %}bg-green-100 text-green-800
+                                                    {% elif feedback.status == 'resolved' %}bg-gray-100 text-gray-800
+                                                    {% endif %}">
+                                                    {{ feedback.status.title() }}
+                                                </span>
+                                                {% if feedback.rating %}
+                                                    <div class="flex text-yellow-400">
+                                                        {% for i in range(feedback.rating) %}★{% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <p class="text-sm text-gray-900 mb-2">{{ feedback.message[:100] }}{% if feedback.message|length > 100 %}...{% endif %}</p>
+                                            <p class="text-xs text-gray-500">
+                                                {% if feedback.name %}{{ feedback.name }} • {% endif %}
+                                                {{ feedback.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+                                            </p>
+                                        </div>
+                                        <a href="{{ url_for('admin.feedback_detail', id=feedback.id) }}" 
+                                           class="text-blue-600 hover:text-blue-800 text-sm font-medium ml-4">
+                                            View
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-8">
+                            <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                            <p class="text-gray-500">No feedback yet</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Rating Distribution -->
+        <div class="space-y-6">
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                <div class="space-y-3">
+                    <a href="{{ url_for('admin.feedback_list') }}" 
+                       class="flex items-center p-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        Manage Feedback
+                    </a>
+                    
+                    <a href="{{ url_for('admin.form_builder') }}" 
+                       class="flex items-center p-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        Form Builder
+                    </a>
+                    
+                    <a href="{{ url_for('admin.users') }}" 
+                       class="flex items-center p-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        Manage Users
+                    </a>
+                    
+                    <a href="{{ url_for('admin.channels') }}" 
+                       class="flex items-center p-3 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100 transition">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16c-.169 1.858-.896 6.728-.896 6.728-.302 1.507-1.123 1.777-1.123 1.777s-.651.114-1.393-.568c-.742-.681-1.429-1.278-1.429-1.278-.651-.519-1.331-1.279-1.331-1.279-.378-.284-.682-.546-.682-.546s-.263-.213-.263-.546c0-.332.186-.568.186-.568s.332-.213.568-.213.48.099.48.099.048-.071.165-.071.213.028.213.28-.165.451-.165.451-.28.332-.28.569c0 .236.236.378.236.378s.451.165.688-.094c.236-.26.402-.688.402-.688s.283-.378.378-.615c.094-.236.07-.52.07-.52s-.071-.284-.284-.284-.426.071-.426.284c0 .213.142.497.142.497s-.213.284-.426.284-.473-.142-.473-.426c0-.284.189-.568.473-.568s.568.189.568.473-.189.568-.473.568z"/>
+                        </svg>
+                        Manage Channels
+                    </a>
+                </div>
+            </div>
+
+            <!-- Rating Distribution -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Rating Distribution</h3>
+                {% set total_ratings = rating_stats.values() | sum %}
+                <div class="space-y-3">
+                    {% for rating in range(5, 0, -1) %}
+                        {% set count = rating_stats[rating] %}
+                        {% set percentage = (count / total_ratings * 100) if total_ratings > 0 else 0 %}
+                        <div class="flex items-center">
+                            <div class="flex items-center w-16">
+                                <span class="text-sm text-gray-600 mr-2">{{ rating }}</span>
+                                <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1 mx-3">
+                                <div class="bg-gray-200 rounded-full h-2">
+                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: {{ percentage }}%"></div>
+                                </div>
+                            </div>
+                            <div class="w-8 text-right">
+                                <span class="text-sm text-gray-600">{{ count }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
