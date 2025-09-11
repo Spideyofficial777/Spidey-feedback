@@ -39,6 +39,7 @@
                         <a href="{{ url_for('main.index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Home</a>
                         <a href="{{ url_for('feedback.submit') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Feedback</a>
                         <a href="{{ url_for('main.channels') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Channels</a>
+                        <a href="{{ url_for('main.about') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">About Spidey</a>
                         
                         {% if current_user.is_authenticated %}
                             {% if current_user.is_admin %}

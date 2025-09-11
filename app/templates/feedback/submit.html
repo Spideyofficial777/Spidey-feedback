@@ -3,138 +3,152 @@
 {% block title %}Submit Feedback - {{ config.APP_NAME }}{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <!-- Header -->
-    <div class="text-center mb-12">
-        <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mx-auto mb-6 flex items-center justify-center">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-            </svg>
-        </div>
-        
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">Share Your Feedback</h1>
-        <p class="text-lg text-gray-600">
-            Your thoughts and suggestions help us improve. All fields marked with * are required.
-        </p>
-    </div>
-
-    <!-- Feedback Form -->
-    <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-        <form action="{{ url_for('feedback.submit') }}" method="POST" class="space-y-6">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-            
-            <!-- Honeypot field for spam protection -->
-            <input type="text" name="website" style="display: none;" tabindex="-1">
-            
-            <!-- Dynamic Form Fields -->
-            {% for field in form_fields %}
-                <div class="form-field">
-                    {% if field.field_type == 'text' %}
-                        <label for="{{ field.field_name }}" class="block text-sm font-medium text-gray-700 mb-2">
-                            {{ field.field_label }}
-                            {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
-                        </label>
-                        <input type="text" 
-                               name="{{ field.field_name }}" 
-                               id="{{ field.field_name }}"
-                               {% if field.is_required %}required{% endif %}
-                               {% if field.field_placeholder %}placeholder="{{ field.field_placeholder }}"{% endif %}
-                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
-                    
-                    {% elif field.field_type == 'email' %}
-                        <label for="{{ field.field_name }}" class="block text-sm font-medium text-gray-700 mb-2">
-                            {{ field.field_label }}
-                            {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
-                        </label>
-                        <input type="email" 
-                               name="{{ field.field_name }}" 
-                               id="{{ field.field_name }}"
-                               {% if field.is_required %}required{% endif %}
-                               {% if field.field_placeholder %}placeholder="{{ field.field_placeholder }}"{% endif %}
-                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
-                    
-                    {% elif field.field_type == 'tel' %}
-                        <label for="{{ field.field_name }}" class="block text-sm font-medium text-gray-700 mb-2">
-                            {{ field.field_label }}
-                            {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
-                        </label>
-                        <input type="tel" 
-                               name="{{ field.field_name }}" 
-                               id="{{ field.field_name }}"
-                               {% if field.is_required %}required{% endif %}
-                               {% if field.field_placeholder %}placeholder="{{ field.field_placeholder }}"{% endif %}
-                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
-                    
-                    {% elif field.field_type == 'textarea' %}
-                        <label for="{{ field.field_name }}" class="block text-sm font-medium text-gray-700 mb-2">
-                            {{ field.field_label }}
-                            {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
-                        </label>
-                        <textarea name="{{ field.field_name }}" 
-                                  id="{{ field.field_name }}" 
-                                  rows="5"
-                                  {% if field.is_required %}required{% endif %}
-                                  {% if field.field_placeholder %}placeholder="{{ field.field_placeholder }}"{% endif %}
-                                  class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-colors"></textarea>
-                    
-                    {% elif field.field_type == 'rating' %}
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            {{ field.field_label }}
-                            {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
-                        </label>
-                        <div class="star-rating flex space-x-1">
-                            <input type="hidden" name="{{ field.field_name }}" value="0">
-                            {% for i in range(1, 6) %}
-                                <span class="star text-3xl text-gray-300 hover:text-yellow-400 cursor-pointer transition-colors" data-rating="{{ i }}">
-                                    ★
-                                </span>
-                            {% endfor %}
-                        </div>
-                        <p class="text-sm text-gray-500 mt-2">Click on a star to rate your experience</p>
-                    
-                    {% elif field.field_type == 'select' %}
-                        <label for="{{ field.field_name }}" class="block text-sm font-medium text-gray-700 mb-2">
-                            {{ field.field_label }}
-                            {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
-                        </label>
-                        <select name="{{ field.field_name }}" 
-                                id="{{ field.field_name }}"
-                                {% if field.is_required %}required{% endif %}
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
-                            <option value="">Select an option...</option>
-                            {% for option in field.options_list %}
-                                <option value="{{ option }}">{{ option }}</option>
-                            {% endfor %}
-                        </select>
-                    {% endif %}
-                </div>
-            {% endfor %}
-
-            <!-- Submit Button -->
-            <div class="pt-6">
-                <button type="submit" 
-                        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                    </svg>
-                    <span>Send Feedback</span>
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Security Notice -->
-    <div class="mt-8 bg-green-50 border border-green-200 rounded-xl p-4">
-        <div class="flex items-start">
-            <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-12 animate-fade-in">
+            <div class="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg floating">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                 </svg>
             </div>
-            <div class="ml-3">
-                <h3 class="text-sm font-medium text-green-800">Your Privacy Matters</h3>
-                <div class="mt-1 text-sm text-green-700">
-                    <p>Your feedback is securely encrypted and handled with care. We never share your information with third parties and only use it to improve our services.</p>
+            
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Share Your Feedback</h1>
+            <p class="text-lg text-gray-600 max-w-md mx-auto">
+                Your thoughts and suggestions help us improve. All fields marked with * are required.
+            </p>
+        </div>
+
+        <!-- Feedback Form -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 transform hover:scale-[1.01] transition-all duration-300">
+            <form action="{{ url_for('feedback.submit') }}" method="POST" class="space-y-6" id="feedback-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                
+                <!-- Honeypot field for spam protection -->
+                <input type="text" name="website" style="display: none;" tabindex="-1">
+                
+                <!-- Security Header -->
+                <div class="security-header bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-lg mb-6">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        <span class="font-semibold">Secure Feedback Form</span>
+                    </div>
+                    <p class="text-sm text-blue-100 mt-1">Your information is encrypted and protected</p>
+                </div>
+                
+                <!-- Dynamic Form Fields -->
+                {% for field in form_fields %}
+                    <div class="form-field animate-fade-in" style="animation-delay: {{ loop.index * 0.1 }}s">
+                        {% if field.field_type == 'text' %}
+                            <label for="{{ field.field_name }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ field.field_label }}
+                                {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
+                            </label>
+                            <input type="text" 
+                                   name="{{ field.field_name }}" 
+                                   id="{{ field.field_name }}"
+                                   {% if field.is_required %}required{% endif %}
+                                   {% if field.field_placeholder %}placeholder="{{ field.field_placeholder }}"{% endif %}
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                        
+                        {% elif field.field_type == 'email' %}
+                            <label for="{{ field.field_name }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ field.field_label }}
+                                {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
+                            </label>
+                            <input type="email" 
+                                   name="{{ field.field_name }}" 
+                                   id="{{ field.field_name }}"
+                                   {% if field.is_required %}required{% endif %}
+                                   {% if field.field_placeholder %}placeholder="{{ field.field_placeholder }}"{% endif %}
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                        
+                        {% elif field.field_type == 'tel' %}
+                            <label for="{{ field.field_name }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ field.field_label }}
+                                {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
+                            </label>
+                            <input type="tel" 
+                                   name="{{ field.field_name }}" 
+                                   id="{{ field.field_name }}"
+                                   {% if field.is_required %}required{% endif %}
+                                   {% if field.field_placeholder %}placeholder="{{ field.field_placeholder }}"{% endif %}
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                        
+                        {% elif field.field_type == 'textarea' %}
+                            <label for="{{ field.field_name }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ field.field_label }}
+                                {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
+                            </label>
+                            <textarea name="{{ field.field_name }}" 
+                                      id="{{ field.field_name }}" 
+                                      rows="5"
+                                      {% if field.is_required %}required{% endif %}
+                                      {% if field.field_placeholder %}placeholder="{{ field.field_placeholder }}"{% endif %}
+                                      class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200"></textarea>
+                        
+                        {% elif field.field_type == 'rating' %}
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ field.field_label }}
+                                {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
+                            </label>
+                            <div class="star-rating flex space-x-1">
+                                <input type="hidden" name="{{ field.field_name }}" value="0">
+                                {% for i in range(1, 6) %}
+                                    <span class="star text-3xl text-gray-300 hover:text-yellow-400 cursor-pointer transition-all duration-200" data-rating="{{ i }}">
+                                        ★
+                                    </span>
+                                {% endfor %}
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2">Click on a star to rate your experience</p>
+                        
+                        {% elif field.field_type == 'select' %}
+                            <label for="{{ field.field_name }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ field.field_label }}
+                                {% if field.is_required %}<span class="text-red-500">*</span>{% endif %}
+                            </label>
+                            <select name="{{ field.field_name }}" 
+                                    id="{{ field.field_name }}"
+                                    {% if field.is_required %}required{% endif %}
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                                <option value="">Select an option...</option>
+                                {% for option in field.options_list %}
+                                    <option value="{{ option }}">{{ option }}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <!-- Submit Button -->
+                <div class="pt-6">
+                    <button type="submit" id="submit-btn"
+                            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 flex items-center justify-center space-x-2 relative overflow-hidden">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                        <span>Send Feedback</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 hover:opacity-100 transition-opacity duration-200"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Security Notice -->
+        <div class="mt-8 bg-green-50 border border-green-200 rounded-xl p-4 transform hover:scale-[1.01] transition-all duration-300">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-green-800">Your Privacy Matters</h3>
+                    <div class="mt-1 text-sm text-green-700">
+                        <p>Your feedback is securely encrypted and handled with care. We never share your information with third parties and only use it to improve our services.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -142,15 +156,64 @@
 </div>
 
 <style>
-.star-rating .star {
-    transition: color 0.2s ease;
-}
-.star-rating .star.active {
-    color: #fbbf24 !important;
-}
-.star-rating .star:hover {
-    color: #fbbf24 !important;
-}
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-fade-in {
+        animation: fadeIn 0.6s ease forwards;
+    }
+    
+    .floating {
+        animation: floating 3s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .star-rating .star {
+        transition: all 0.2s ease;
+    }
+    
+    .star-rating .star:hover,
+    .star-rating .star.active {
+        transform: scale(1.2);
+    }
+    
+    #submit-btn:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: all 0.5s ease;
+    }
+    
+    #submit-btn:hover:before {
+        left: 100%;
+    }
+    
+    .form-field {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .form-field.animate-fade-in {
+        opacity: 1;
+        transform: translateY(0);
+    }
 </style>
 
 <script>
@@ -183,12 +246,36 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateStars(stars, rating) {
         stars.forEach((star, index) => {
             if (index < rating) {
-                star.classList.add('active');
+                star.classList.add('active', 'text-yellow-400');
+                star.classList.remove('text-gray-300');
             } else {
-                star.classList.remove('active');
+                star.classList.remove('active', 'text-yellow-400');
+                star.classList.add('text-gray-300');
             }
         });
     }
+    
+    // Add form submission animation
+    const form = document.getElementById('feedback-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Encrypting & Sending...</span>
+            `;
+            submitBtn.disabled = true;
+        });
+    }
+    
+    // Animate form fields on load
+    const formFields = document.querySelectorAll('.form-field');
+    formFields.forEach((field, index) => {
+        field.style.animationDelay = `${0.1 + (index * 0.1)}s`;
+    });
 });
 </script>
 {% endblock %}

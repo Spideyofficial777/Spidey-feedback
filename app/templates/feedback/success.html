@@ -3,89 +3,170 @@
 {% block title %}Thank You - {{ config.APP_NAME }}{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-    <!-- Success Icon -->
-    <div class="w-20 h-20 bg-green-100 rounded-full mx-auto mb-8 flex items-center justify-center">
-        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-    </div>
-
-    <!-- Success Message -->
-    <h1 class="text-4xl font-bold text-gray-900 mb-4">Thank You!</h1>
-    <p class="text-xl text-gray-600 mb-8">
-        Your feedback has been successfully submitted. We appreciate you taking the time to share your thoughts with us.
-    </p>
-
-    <!-- What happens next -->
-    <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 mb-8">
-        <h2 class="text-2xl font-semibold text-gray-900 mb-6">What happens next?</h2>
-        
-        <div class="space-y-6">
-            <div class="flex items-start">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span class="text-blue-600 font-semibold text-sm">1</span>
-                    </div>
-                </div>
-                <div class="ml-4 text-left">
-                    <h3 class="font-semibold text-gray-900 mb-1">Review Process</h3>
-                    <p class="text-gray-600">Our team will carefully review your feedback within 24 hours.</p>
-                </div>
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 py-12">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <!-- Success Animation -->
+        <div class="relative mx-auto mb-8 w-24 h-24">
+            <div class="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-75"></div>
+            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center relative">
+                <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
             </div>
+        </div>
 
-            <div class="flex items-start">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span class="text-blue-600 font-semibold text-sm">2</span>
+        <!-- Success Message -->
+        <h1 class="text-4xl font-bold text-gray-900 mb-4 animate-fade-in">Thank You!</h1>
+        <p class="text-xl text-gray-600 mb-8 animate-fade-in" style="animation-delay: 0.2s">
+            Your feedback has been successfully submitted. We appreciate you taking the time to share your thoughts with us.
+        </p>
+
+        <!-- Confetti Animation -->
+        <div class="confetti-container absolute inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+        <!-- What happens next -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 mb-8 transform hover:scale-[1.01] transition-all duration-300 animate-fade-in" style="animation-delay: 0.4s">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">What happens next?</h2>
+            
+            <div class="space-y-6">
+                <div class="flex items-start animate-fade-in" style="animation-delay: 0.5s">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-blue-600 font-semibold text-sm">1</span>
+                        </div>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h3 class="font-semibold text-gray-900 mb-1">Review Process</h3>
+                        <p class="text-gray-600">Our team will carefully review your feedback within 24 hours.</p>
                     </div>
                 </div>
-                <div class="ml-4 text-left">
-                    <h3 class="font-semibold text-gray-900 mb-1">Personal Response</h3>
-                    <p class="text-gray-600">If you provided your email, we'll send you a personal response if needed.</p>
-                </div>
-            </div>
 
-            <div class="flex items-start">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span class="text-blue-600 font-semibold text-sm">3</span>
+                <div class="flex items-start animate-fade-in" style="animation-delay: 0.6s">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-blue-600 font-semibold text-sm">2</span>
+                        </div>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h3 class="font-semibold text-gray-900 mb-1">Personal Response</h3>
+                        <p class="text-gray-600">If you provided your email, we'll send you a personal response if needed.</p>
                     </div>
                 </div>
-                <div class="ml-4 text-left">
-                    <h3 class="font-semibold text-gray-900 mb-1">Improvements</h3>
-                    <p class="text-gray-600">Your suggestions help us make our platform better for everyone.</p>
+
+                <div class="flex items-start animate-fade-in" style="animation-delay: 0.7s">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-blue-600 font-semibold text-sm">3</span>
+                        </div>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h3 class="font-semibold text-gray-900 mb-1">Improvements</h3>
+                        <p class="text-gray-600">Your suggestions help us make our platform better for everyone.</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Action Buttons -->
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="{{ url_for('main.index') }}" 
-           class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200">
-            Go to Homepage
-        </a>
-        
-        <a href="{{ url_for('feedback.submit') }}" 
-           class="border border-gray-300 text-gray-700 px-8 py-3 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
-            Send Another Feedback
-        </a>
-    </div>
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style="animation-delay: 0.8s">
+            <a href="{{ url_for('main.index') }}" 
+               class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200">
+                Go to Homepage
+            </a>
+            
+            <a href="{{ url_for('feedback.submit') }}" 
+               class="border border-gray-300 text-gray-700 px-8 py-3 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
+                Send Another Feedback
+            </a>
+        </div>
 
-    <!-- Join Channels CTA -->
-    <div class="mt-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
-        <h3 class="text-2xl font-bold mb-4">Stay Connected</h3>
-        <p class="text-blue-100 mb-6">
-            Join our Telegram channels to get updates and be part of our community.
-        </p>
-        <a href="{{ url_for('main.channels') }}" 
-           class="inline-flex items-center space-x-2 bg-white text-blue-600 px-6 py-3 rounded-xl font-medium hover:bg-gray-100 transition-colors duration-200">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16c-.169 1.858-.896 6.728-.896 6.728-.302 1.507-1.123 1.777-1.123 1.777s-.651.114-1.393-.568c-.742-.681-1.429-1.278-1.429-1.278-.651-.519-1.331-1.279-1.331-1.279-.378-.284-.682-.546-.682-.546s-.263-.213-.263-.546c0-.332.186-.568.186-.568s.332-.213.568-.213.48.099.48.099.048-.071.165-.071.213.028.213.28-.165.451-.165.451-.28.332-.28.569c0 .236.236.378.236.378s.451.165.688-.094c.236-.26.402-.688.402-.688s.283-.378.378-.615c.094-.236.07-.52.07-.52s-.071-.284-.284-.284-.426.071-.426.284c0 .213.142.497.142.497s-.213.284-.426.284-.473-.142-.473-.426c0-.284.189-.568.473-.568s.568.189.568.473-.189.568-.473.568z"/>
-            </svg>
-            <span>Join Our Channels</span>
-        </a>
+        <!-- Join Channels CTA -->
+        <div class="mt-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white animate-fade-in" style="animation-delay: 1s">
+            <h3 class="text-2xl font-bold mb-4">Stay Connected</h3>
+            <p class="text-blue-100 mb-6">
+                Join our Telegram channels to get updates and be part of our community.
+            </p>
+            <a href="{{ url_for('main.channels') }}" 
+               class="inline-flex items-center space-x-2 bg-white text-blue-600 px-6 py-3 rounded-xl font-medium hover:bg-gray-100 transition-all duration-200">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16c-.169 1.858-.896 6.728-.896 6.728-.302 1.507-1.123 1.777-1.123 1.777s-.651.114-1.393-.568c-.742-.681-1.429-1.278-1.429-1.278-.651-.519-1.331-1.279-1.331-1.279-.378-.284-.682-.546-.682-.546s-.263-.213-.263-.546c0-.332.186-.568.186-.568s.332-.213.568-.213.48.099.48.099.048-.071.165-.071.213.028.213.28-.165.451-.165.451-.28.332-.28.569c0 .236.236.378.236.378s.451.165.688-.094c.236-.26.402-.688.402-.688s.283-.378.378-.615c.094-.236.07-.52.07-.52s-.071-.284-.284-.284-.426.071-.426.284c0 .213.142.497.142.497s-.213.284-.426.284-.473-.142-.473-.426c0-.284.189-.568.473-.568s.568.189.568.473-.189.568-.473.568z"/>
+                </svg>
+                <span>Join Our Channels</span>
+            </a>
+        </div>
     </div>
 </div>
+
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-fade-in {
+        opacity: 0;
+        animation: fadeIn 0.6s ease forwards;
+    }
+    
+    .confetti {
+        position: absolute;
+        border-radius: 50%;
+        animation: confetti-fall 5s linear forwards;
+    }
+    
+    @keyframes confetti-fall {
+        0% {
+            transform: translateY(-100px) rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Create confetti animation
+    function createConfetti() {
+        const container = document.querySelector('.confetti-container');
+        const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9c74f', '#ffafcc', '#83e377'];
+        
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            
+            const size = Math.random() * 10 + 5;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const left = Math.random() * 100;
+            const animationDuration = Math.random() * 3 + 2;
+            const animationDelay = Math.random() * 2;
+            
+            confetti.style.width = `${size}px`;
+            confetti.style.height = `${size}px`;
+            confetti.style.backgroundColor = color;
+            confetti.style.left = `${left}%`;
+            confetti.style.animationDuration = `${animationDuration}s`;
+            confetti.style.animationDelay = `${animationDelay}s`;
+            
+            container.appendChild(confetti);
+        }
+    }
+    
+    createConfetti();
+    
+    // Animate elements with delay
+    const animatedElements = document.querySelectorAll('.animate-fade-in');
+    animatedElements.forEach((el, index) => {
+        el.style.animationDelay = `${el.style.animationDelay || (index * 0.2 + 0.2)}s`;
+    });
+});
+</script>
 {% endblock %}
