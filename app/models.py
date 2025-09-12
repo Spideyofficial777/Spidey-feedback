@@ -1,16 +1,19 @@
+from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 import secrets
 import string
-from datetime import datetime, timedelta
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    oauth_provider = db.Column(db.String(50))  # 'google', 'github', or None for regular
+    oauth_id = db.Column(db.String(100))  # OAuth provider user ID
+    avatar_url = db.Column(db.String(500))  # Profile picture URL
     is_admin = db.Column(db.Boolean, default=False)
     is_verified = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
@@ -27,11 +30,13 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
     
+    from datetime import datetime, timedelta
+
     def generate_otp(self):
         self.otp_code = ''.join(secrets.choice(string.digits) for _ in range(6))
         self.otp_expires_at = datetime.utcnow().replace(microsecond=0) + timedelta(minutes=10)
         return self.otp_code
-    
+ 
     def verify_otp(self, otp):
         if not self.otp_code or not self.otp_expires_at:
             return False
@@ -42,7 +47,28 @@ class User(UserMixin, db.Model):
     def clear_otp(self):
         self.otp_code = None
         self.otp_expires_at = None
+    
+    @staticmethod
+    def create_oauth_user(email, username, provider, oauth_id, avatar_url=None):
+        """Create a new OAuth user"""
+        user = User(
+            username=username,
+            email=email,
+            password_hash='',  # OAuth users don't have passwords
+            oauth_provider=provider,
+            oauth_id=str(oauth_id),
+            avatar_url=avatar_url,
+            is_verified=True  # OAuth users are pre-verified
+        )
+        return user
 
+class FeedbackSubject(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
+    description = db.Column(db.Text)
+    is_active = db.Column(db.Boolean, default=True)
+    order_index = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -51,13 +77,29 @@ class Feedback(db.Model):
     message = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Integer)
     status = db.Column(db.String(20), default='new')  # new, reading, responded, resolved
+    subject = db.Column(db.String(100))  # Feedback subject/category
     ip_address = db.Column(db.String(45))
     user_agent = db.Column(db.String(500))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     admin_reply = db.Column(db.Text)
     replied_at = db.Column(db.DateTime)
+
+    # Foreign keys
     replied_by = db.Column(db.Integer, db.ForeignKey('user.id'))
-    
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+
+    # Relationships with explicit foreign keys
+    replied_by_user = db.relationship(
+        'User',
+        foreign_keys=[replied_by],
+        backref=db.backref('replied_feedbacks', lazy='dynamic')
+    )
+    user = db.relationship(
+        'User',
+        foreign_keys=[user_id],
+        backref=db.backref('feedback_submissions', lazy='dynamic')
+    )
+
     # Additional dynamic fields stored as JSON
     additional_data = db.Column(db.JSON)
 
@@ -71,7 +113,7 @@ class FormField(db.Model):
     is_required = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
     order_index = db.Column(db.Integer, default=0)
-    validation_pattern = db.Column(db.String(10000))
+    validation_pattern = db.Column(db.String(100000))
     min_length = db.Column(db.Integer)
     max_length = db.Column(db.Integer)
     
