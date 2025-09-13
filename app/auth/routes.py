@@ -9,7 +9,7 @@ import secrets
 import string
 
 @bp.route('/register', methods=['GET', 'POST'])
-@limiter.limit("5 per minute")
+# @limiter.limit("5 per minute")
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -98,7 +98,7 @@ def resend_otp(user_id):
     return redirect(url_for('auth.verify_email', user_id=user.id))
 
 @bp.route('/login', methods=['GET', 'POST'])
-@limiter.limit("10 per minute")
+# @limiter.limit("100 per minute")
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))

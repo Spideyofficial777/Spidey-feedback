@@ -71,7 +71,7 @@ class FormField(db.Model):
     is_required = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
     order_index = db.Column(db.Integer, default=0)
-    validation_pattern = db.Column(db.String(10000))
+    validation_pattern = db.Column(db.String(200))
     min_length = db.Column(db.Integer)
     max_length = db.Column(db.Integer)
     
