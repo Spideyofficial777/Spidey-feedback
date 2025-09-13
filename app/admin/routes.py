@@ -1,7 +1,7 @@
 from flask import render_template, request, flash, redirect, url_for, jsonify, make_response, current_app
 from flask_login import login_required, current_user
 from app.admin import bp
-from app.models import User, Feedback, FormField, Channel, AdminLog
+from app.models import User, Feedback, FormField, Channel, AdminLog, FeedbackSubject
 from app import db, limiter
 from app.email_service import send_admin_otp, send_feedback_reply
 from functools import wraps
@@ -369,6 +369,79 @@ def delete_form_field(id):
     db.session.commit()
     
     return jsonify({'success': True, 'message': 'Field deleted successfully'})
+
+@bp.route('/subjects')
+@admin_otp_required
+def subjects():
+    subjects = FeedbackSubject.query.order_by(FeedbackSubject.order_index).all()
+    return render_template('admin/subjects.html', subjects=subjects)
+
+@bp.route('/subjects/add', methods=['POST'])
+@admin_otp_required
+def add_subject():
+    name = request.form.get('name', '').strip()
+    description = request.form.get('description', '').strip()
+    
+    if name:
+        # Check if subject already exists
+        existing = FeedbackSubject.query.filter_by(name=name).first()
+        if existing:
+            flash('Subject already exists.', 'error')
+        else:
+            subject = FeedbackSubject(
+                name=name,
+                description=description,
+                order_index=FeedbackSubject.query.count() + 1
+            )
+            db.session.add(subject)
+            db.session.commit()
+            
+            # Log action
+            log = AdminLog(
+                admin_id=current_user.id,
+                action='Add Subject',
+                details=f'Added new subject: {name}',
+                ip_address=request.remote_addr
+            )
+            db.session.add(log)
+            db.session.commit()
+            
+            flash('Subject added successfully!', 'success')
+    else:
+        flash('Subject name is required.', 'error')
+    
+    return redirect(url_for('admin.subjects'))
+
+@bp.route('/subjects/<int:id>/delete', methods=['POST'])
+@admin_otp_required
+def delete_subject(id):
+    subject = FeedbackSubject.query.get_or_404(id)
+    
+    # Log action before deletion
+    log = AdminLog(
+        admin_id=current_user.id,
+        action='Delete Subject',
+        details=f'Deleted subject: {subject.name}',
+        ip_address=request.remote_addr
+    )
+    db.session.add(log)
+    
+    db.session.delete(subject)
+    db.session.commit()
+    
+    flash('Subject deleted successfully.', 'success')
+    return redirect(url_for('admin.subjects'))
+
+@bp.route('/subjects/<int:id>/toggle', methods=['POST'])
+@admin_otp_required
+def toggle_subject(id):
+    subject = FeedbackSubject.query.get_or_404(id)
+    subject.is_active = not subject.is_active
+    db.session.commit()
+    
+    status = 'activated' if subject.is_active else 'deactivated'
+    flash(f'Subject {status} successfully.', 'success')
+    return redirect(url_for('admin.subjects'))
 
 @bp.route('/users')
 @admin_otp_required

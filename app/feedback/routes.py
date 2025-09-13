@@ -1,14 +1,17 @@
 from flask import render_template, request, flash, redirect, url_for, jsonify
+from flask_login import login_required, current_user
 from app.feedback import bp
-from app.models import Feedback, FormField
+from app.models import Feedback, FormField, FeedbackSubject
 from app import db, limiter
 from app.email_service import send_feedback_confirmation, send_admin_notification
 import json
 
 @bp.route('/submit', methods=['GET', 'POST'])
+@login_required
 @limiter.limit("3 per minute")
 def submit():
     form_fields = FormField.query.filter_by(is_active=True).order_by(FormField.order_index).all()
+    subjects = FeedbackSubject.query.filter_by(is_active=True).order_by(FeedbackSubject.order_index).all()
     
     if request.method == 'POST':
         # Basic spam protection - honeypot field
@@ -24,6 +27,7 @@ def submit():
         name = request.form.get('name', '').strip()
         email = request.form.get('email', '').strip()
         phone = request.form.get('phone', '').strip()
+        subject = request.form.get('subject', '').strip()
         message = request.form.get('message', '').strip()
         rating = request.form.get('rating', type=int)
         
@@ -53,8 +57,10 @@ def submit():
             name=name or None,
             email=email or None,
             phone=phone or None,
+            subject=subject or None,
             message=message,
             rating=rating,
+            user_id=current_user.id,
             ip_address=request.remote_addr,
             user_agent=request.headers.get('User-Agent'),
             additional_data=additional_data if additional_data else None
@@ -72,7 +78,7 @@ def submit():
         flash('Thank you for your feedback! We will get back to you soon.', 'success')
         return redirect(url_for('feedback.success'))
     
-    return render_template('feedback/submit.html', form_fields=form_fields)
+    return render_template('feedback/submit.html', form_fields=form_fields, subjects=subjects)
 
 @bp.route('/success')
 def success():

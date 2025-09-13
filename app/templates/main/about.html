@@ -3,266 +3,25 @@
 {% block title %}About Us - {{ config.APP_NAME }}{% endblock %}
 
 {% block content %}
-<style>
-    /* Custom Animations and Styles */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
-    body {
-        font-family: 'Inter', sans-serif;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
-    
-    .animate-float {
-        animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
-        100% { transform: translateY(0px); }
-    }
-    
-    .animate-pulse-slow {
-        animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    
-    @keyframes pulse-slow {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.8; }
-    }
-    
-    .gradient-bg {
-        background: linear-gradient(-45deg, #3b82f6, #8b5cf6, #6366f1, #a855f7);
-        background-size: 400% 400%;
-        animation: gradient 15s ease infinite;
-    }
-    
-    @keyframes gradient {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-    
-    .fade-in {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    
-    .fade-in.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .slide-in-left {
-        opacity: 0;
-        transform: translateX(-50px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    
-    .slide-in-left.visible {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    
-    .slide-in-right {
-        opacity: 0;
-        transform: translateX(50px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    
-    .slide-in-right.visible {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    
-    .card-hover {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .card-hover:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-    
-    .btn-hover {
-        transition: all 0.3s ease;
-        background-size: 200% auto;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .btn-hover:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: all 0.5s ease;
-    }
-    
-    .btn-hover:hover:before {
-        left: 100%;
-    }
-    
-    .btn-hover:hover {
-        background-position: right center;
-    }
-    
-    .stat-number {
-        font-size: 3rem;
-        font-weight: 700;
-        background: linear-gradient(to right, #ffffff, #e0e7ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
-    .particle {
-        position: absolute;
-        border-radius: 50%;
-        opacity: 0.3;
-        animation: float-particle 15s infinite linear;
-        z-index: 0;
-    }
-    
-    @keyframes float-particle {
-        0% {
-            transform: translateY(0) translateX(0) rotate(0deg);
-        }
-        100% {
-            transform: translateY(-100vh) translateX(100px) rotate(360deg);
-        }
-    }
-    
-    .stagger-animation > * {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    
-    .stagger-animation.visible > * {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .stagger-animation.visible > *:nth-child(1) { transition-delay: 0.1s; }
-    .stagger-animation.visible > *:nth-child(2) { transition-delay: 0.2s; }
-    .stagger-animation.visible > *:nth-child(3) { transition-delay: 0.3s; }
-    .stagger-animation.visible > *:nth-child(4) { transition-delay: 0.4s; }
-    .stagger-animation.visible > *:nth-child(5) { transition-delay: 0.5s; }
-    .stagger-animation.visible > *:nth-child(6) { transition-delay: 0.6s; }
-    
-    .gradient-text {
-        background: linear-gradient(135deg, #0063B2 0%, #D32F2F 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
-    .spidey-pulse {
-        animation: spidey-pulse 2s infinite;
-    }
-    
-    @keyframes spidey-pulse {
-        0% { box-shadow: 0 0 0 0 rgba(0, 131, 202, 0.4); }
-        70% { box-shadow: 0 0 0 10px rgba(0, 131, 202, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(0, 131, 202, 0); }
-    }
-    
-    .hover-lift {
-        transition: transform 0.3s ease;
-    }
-    
-    .hover-lift:hover {
-        transform: translateY(-5px);
-    }
-    
-    .telegram-button {
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s;
-    }
-    
-    .telegram-button::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 5px;
-        height: 5px;
-        background: rgba(255, 255, 255, 0.5);
-        opacity: 0;
-        border-radius: 100%;
-        transform: scale(1, 1) translate(-50%);
-        transform-origin: 50% 50%;
-    }
-    
-    .telegram-button:focus:not(:active)::after {
-        animation: ripple 1s ease-out;
-    }
-    
-    @keyframes ripple {
-        0% {
-            transform: scale(0, 0);
-            opacity: 1;
-        }
-        20% {
-            transform: scale(25, 25);
-            opacity: 1;
-        }
-        100% {
-            opacity: 0;
-            transform: scale(40, 40);
-        }
-    }
-    
-    .floating-icon {
-        animation: float 6s ease-in-out infinite;
-    }
-</style>
-
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative overflow-hidden">
-    <!-- Animated Background Elements -->
-    <div class="fixed top-0 left-0 w-full h-full pointer-events-none -z-10 overflow-hidden">
-        <div class="absolute top-10 left-10 w-20 h-20 rounded-full bg-blue-100 opacity-20 animate-float"></div>
-        <div class="absolute top-1/4 right-14 w-16 h-16 rounded-full bg-purple-100 opacity-20 animate-float" style="animation-delay: 1.5s;"></div>
-        <div class="absolute bottom-20 left-1/4 w-24 h-24 rounded-full bg-indigo-100 opacity-20 animate-float" style="animation-delay: 2.5s;"></div>
-        <div class="absolute bottom-1/3 right-1/4 w-12 h-12 rounded-full bg-blue-100 opacity-20 animate-float" style="animation-delay: 3.5s;"></div>
-    </div>
-    
-    <!-- Animated Background Particles -->
-    <div id="particles-container" class="absolute inset-0 overflow-hidden pointer-events-none z-0"></div>
-    
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <!-- Header -->
-    <div class="text-center mb-16 relative z-10">
-        <div class="relative inline-block mb-8">
-            <div class="w-24 h-24 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg spidey-pulse">
-                <svg class="w-10 h-10 text-white floating-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-            </div>
-            <div class="absolute -bottom-2 -right-2 bg-white rounded-full p-1 shadow-md">
-                <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-                    <i class="fas fa-plus text-xs text-white"></i>
-                </div>
-            </div>
+    <div class="text-center mb-16">
+        <div class="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mx-auto mb-8 flex items-center justify-center shadow-lg">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
         </div>
         
-        <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 fade-in gradient-text">About {{ config.APP_NAME }}</h1>
-        <p class="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed fade-in" style="transition-delay: 0.2s;">
+        <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">About {{ config.APP_NAME }}</h1>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             We're dedicated to creating meaningful connections between users and organizations through secure, accessible feedback systems.
         </p>
     </div>
 
     <!-- Mission Section -->
-    <div class="bg-white rounded-2xl shadow-xl p-8 mb-12 border border-gray-100 relative z-10 card-hover">
+    <div class="bg-white rounded-2xl shadow-xl p-8 mb-12 border border-gray-100">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div class="slide-in-left">
+            <div>
                 <h2 class="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
                 <p class="text-gray-600 mb-4 leading-relaxed">
                     At {{ config.APP_NAME }}, we believe that every voice matters. Our platform is designed to bridge the gap between users and organizations, making it easier than ever to share thoughts, suggestions, and experiences.
@@ -271,10 +30,10 @@
                     We're committed to providing a secure, user-friendly environment where feedback can flow freely and constructively, helping organizations improve and users feel heard.
                 </p>
             </div>
-            <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-8 slide-in-right">
+            <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-8">
                 <div class="text-center">
-                    <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center animate-pulse-slow">
-                        <svg class="w-8 h-8 text-white floating-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
                     </div>
@@ -286,10 +45,10 @@
     </div>
 
     <!-- Features Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 stagger-animation">
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 card-hover hover-lift">
-            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4 animate-pulse-slow">
-                <svg class="w-6 h-6 text-blue-600 floating-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                 </svg>
             </div>
@@ -297,9 +56,9 @@
             <p class="text-gray-600 text-sm">Enterprise-grade security with encrypted communications and privacy protection.</p>
         </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 card-hover hover-lift">
-            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4 animate-pulse-slow" style="animation-delay: 0.5s;">
-                <svg class="w-6 h-6 text-green-600 floating-icon" style="animation-delay: 1.5s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
             </div>
@@ -307,9 +66,9 @@
             <p class="text-gray-600 text-sm">Optimized performance ensures your feedback reaches us instantly.</p>
         </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 card-hover hover-lift">
-            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4 animate-pulse-slow" style="animation-delay: 1s;">
-                <svg class="w-6 h-6 text-purple-600 floating-icon" style="animation-delay: 2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
                 </svg>
             </div>
@@ -317,9 +76,9 @@
             <p class="text-gray-600 text-sm">Perfect experience across all devices, from mobile to desktop.</p>
         </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 card-hover hover-lift">
-            <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mb-4 animate-pulse-slow" style="animation-delay: 1.5s;">
-                <svg class="w-6 h-6 text-yellow-600 floating-icon" style="animation-delay: 2.5s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+            <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
@@ -327,9 +86,9 @@
             <p class="text-gray-600 text-sm">Submit feedback anytime, anywhere. We're always here to listen.</p>
         </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 card-hover hover-lift">
-            <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4 animate-pulse-slow" style="animation-delay: 2s;">
-                <svg class="w-6 h-6 text-indigo-600 floating-icon" style="animation-delay: 3s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+            <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                 </svg>
             </div>
@@ -337,9 +96,9 @@
             <p class="text-gray-600 text-sm">Get personal responses from our team for important feedback.</p>
         </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 card-hover hover-lift">
-            <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4 animate-pulse-slow" style="animation-delay: 2.5s;">
-                <svg class="w-6 h-6 text-red-600 floating-icon" style="animation-delay: 3.5s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+            <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                 </svg>
             </div>
@@ -349,41 +108,38 @@
     </div>
 
     <!-- Team Section -->
-    <div class="gradient-bg rounded-2xl p-8 text-white text-center mb-12 relative z-10 card-hover">
-        <div class="absolute inset-0 bg-black opacity-10"></div>
-        <div class="relative z-10">
-            <h2 class="text-3xl font-bold mb-4 fade-in">Our Commitment</h2>
-            <p class="text-blue-100 mb-6 max-w-2xl mx-auto leading-relaxed fade-in" style="transition-delay: 0.2s;">
-                We're committed to continuous improvement based on your feedback. Every suggestion helps us build a better platform for everyone.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 stagger-animation">
-                <div>
-                    <div class="stat-number" data-count="99.9">0</div>
-                    <div class="text-blue-100">Uptime Guarantee</div>
-                </div>
-                <div>
-                    <div class="stat-number" data-count="24">&lt;0h</div>
-                    <div class="text-blue-100">Response Time</div>
-                </div>
-                <div>
-                    <div class="stat-number" data-count="100">0</div>
-                    <div class="text-blue-100">Privacy Protected</div>
-                </div>
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4">Our Commitment</h2>
+        <p class="text-blue-100 mb-6 max-w-2xl mx-auto leading-relaxed">
+            We're committed to continuous improvement based on your feedback. Every suggestion helps us build a better platform for everyone.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div>
+                <div class="text-3xl font-bold mb-2">99.9%</div>
+                <div class="text-blue-100">Uptime Guarantee</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold mb-2">&lt;24h</div>
+                <div class="text-blue-100">Response Time</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold mb-2">100%</div>
+                <div class="text-blue-100">Privacy Protected</div>
             </div>
         </div>
     </div>
 
     <!-- Contact Section -->
-    <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 relative z-10 card-hover">
+    <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
         <div class="text-center">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4 fade-in">Get in Touch</h2>
-            <p class="text-gray-600 mb-8 max-w-2xl mx-auto fade-in" style="transition-delay: 0.2s;">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Get in Touch</h2>
+            <p class="text-gray-600 mb-8 max-w-2xl mx-auto">
                 Have questions about our platform or want to learn more? We'd love to hear from you.
             </p>
             
-            <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in" style="transition-delay: 0.4s;">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="{{ url_for('feedback.submit') }}" 
-                   class="telegram-button bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 btn-hover">
+                   class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200">
                     Send Us Feedback
                 </a>
                 
@@ -395,122 +151,4 @@
         </div>
     </div>
 </div>
-
-<script>
-    // Create animated particles
-    function createParticles() {
-        const container = document.getElementById('particles-container');
-        const colors = ['#3b82f6', '#8b5cf6', '#6366f1', '#a855f7'];
-        
-        for (let i = 0; i < 15; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            
-            // Random properties
-            const size = Math.random() * 20 + 5;
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const left = Math.random() * 100;
-            const animationDuration = Math.random() * 20 + 10;
-            const animationDelay = Math.random() * 5;
-            
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            particle.style.backgroundColor = color;
-            particle.style.left = `${left}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-            particle.style.animationDuration = `${animationDuration}s`;
-            particle.style.animationDelay = `${animationDelay}s`;
-            
-            container.appendChild(particle);
-        }
-    }
-
-    // Scroll animation for elements
-    function checkScroll() {
-        const elements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .stagger-animation');
-        
-        elements.forEach(element => {
-            const elementPosition = element.getBoundingClientRect().top;
-            const screenPosition = window.innerHeight / 1.3;
-            
-            if (elementPosition < screenPosition) {
-                element.classList.add('visible');
-            }
-        });
-    }
-
-    // Animate statistics numbers
-    function animateNumbers() {
-        const statElements = document.querySelectorAll('.stat-number');
-        
-        statElements.forEach(element => {
-            const target = parseFloat(element.getAttribute('data-count'));
-            const duration = 2000; // 2 seconds
-            const steps = 60; // 60 frames
-            const stepValue = target / steps;
-            let current = 0;
-            
-            const timer = setInterval(() => {
-                current += stepValue;
-                if (current >= target) {
-                    clearInterval(timer);
-                    if (element.textContent.startsWith('<')) {
-                        element.textContent = '<' + target + 'h';
-                    } else {
-                        element.textContent = target + (element.getAttribute('data-count').includes('.') ? '%' : '%');
-                    }
-                } else {
-                    if (element.textContent.startsWith('<')) {
-                        element.textContent = '<' + Math.floor(current) + 'h';
-                    } else {
-                        element.textContent = Math.floor(current) + (element.getAttribute('data-count').includes('.') ? '%' : '%');
-                    }
-                }
-            }, duration / steps);
-        });
-    }
-
-    // Add ripple effect to buttons
-    function addRippleEffect() {
-        const buttons = document.querySelectorAll('.telegram-button');
-        buttons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                const x = e.clientX - e.target.getBoundingClientRect().left;
-                const y = e.clientY - e.target.getBoundingClientRect().top;
-                
-                const ripple = document.createElement('span');
-                ripple.classList.add('ripple-effect');
-                ripple.style.left = `${x}px`;
-                ripple.style.top = `${y}px`;
-                this.appendChild(ripple);
-                
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            });
-        });
-    }
-
-    // Initialize everything when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        createParticles();
-        addRippleEffect();
-        window.addEventListener('scroll', checkScroll);
-        checkScroll(); // Check on initial load
-        
-        // Animate numbers when they come into view
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateNumbers();
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
-        
-        document.querySelectorAll('.stat-number').forEach(stat => {
-            observer.observe(stat.parentElement);
-        });
-    });
-</script>
 {% endblock %}

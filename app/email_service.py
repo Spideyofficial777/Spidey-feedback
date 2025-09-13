@@ -6,18 +6,25 @@ import logging
 def send_email(to, subject, html_body, text_body=None):
     """Send email with error handling"""
     try:
+        sender_email = (
+            current_app.config.get('MAIL_DEFAULT_SENDER')
+            or current_app.config.get('MAIL_USERNAME')
+            or "no-reply@example.com"
+        )
+
         msg = Message(
             subject=f"[{current_app.config['APP_NAME']}] {subject}",
             recipients=[to],
             html=html_body,
             body=text_body or "",
-            sender=current_app.config.get('MAIL_DEFAULT_SENDER')  # <-- added
+            sender=sender_email
         )
         mail.send(msg)
         return True
     except Exception as e:
         current_app.logger.error(f"Failed to send email to {to}: {str(e)}")
         return False
+
 
 
 def send_verification_email(email, username, otp):

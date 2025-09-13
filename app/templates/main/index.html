@@ -3,428 +3,174 @@
 {% block title %}{{ config.APP_NAME }} - Secure Feedback Platform{% endblock %}
 
 {% block content %}
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
-    body {
-        font-family: 'Inter', sans-serif;
-        overflow-x: hidden;
-    }
-    
-    /* Hero Section Animations */
-    .hero-gradient {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    .hero-pattern {
-        background-image: radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                          radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-    }
-    
-    .floating {
-        animation: floating 3s ease-in-out infinite;
-    }
-    
-    @keyframes floating {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    
-    .pulse-ring {
-        position: absolute;
-        border: 2px solid rgba(255, 255, 255, 0.4);
-        border-radius: 50%;
-        height: 120px;
-        width: 120px;
-        animation: pulse 2s linear infinite;
-        opacity: 0;
-    }
-    
-    @keyframes pulse {
-        0% { transform: scale(0.5); opacity: 0; }
-        50% { opacity: 0.7; }
-        100% { transform: scale(1.2); opacity: 0; }
-    }
-    
-    /* Feature Card Animations */
-    .feature-card {
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .feature-card:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 5px;
-        background: linear-gradient(to right, #667eea, #764ba2);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.3s ease;
-    }
-    
-    .feature-card:hover:before {
-        transform: scaleX(1);
-    }
-    
-    .feature-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Security Badge */
-    .security-badge {
-        position: relative;
-        display: inline-block;
-    }
-    
-    .security-badge:after {
-        content: '🔒 Secure';
-        position: absolute;
-        top: -10px;
-        right: -70px;
-        background: #10b981;
-        color: white;
-        font-size: 0.7rem;
-        padding: 2px 8px;
-        border-radius: 12px;
-        animation: bounce 2s infinite;
-    }
-    
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-5px); }
-    }
-    
-    /* Stats Counter Animation */
-    .stat-number {
-        font-variant-numeric: tabular-nums;
-    }
-    
-    /* Button Animations */
-    .btn-primary {
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s;
-    }
-    
-    .btn-primary:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: all 0.5s ease;
-    }
-    
-    .btn-primary:hover:before {
-        left: 100%;
-    }
-    
-    /* Modal Animations */
-    .modal-enter {
-        animation: modalEnter 0.3s ease-out forwards;
-    }
-    
-    .modal-leave {
-        animation: modalLeave 0.2s ease-in forwards;
-    }
-    
-    @keyframes modalEnter {
-        from { opacity: 0; transform: scale(0.95) translateY(-20px); }
-        to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    
-    @keyframes modalLeave {
-        from { opacity: 1; transform: scale(1) translateY(0); }
-        to { opacity: 0; transform: scale(0.95) translateY(-20px); }
-    }
-    
-    /* Background Elements */
-    .bg-dots {
-        background-image: radial-gradient(#667eea 1px, transparent 1px);
-        background-size: 20px 20px;
-    }
-    
-    /* Text Animation */
-    .text-gradient {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
-    /* Scroll Animation */
-    .fade-in {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    
-    .fade-in.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    /* Particle Animation */
-    .particles-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        pointer-events: none;
-        z-index: 1;
-    }
-    
-    .particle {
-        position: absolute;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        animation: float-particle 15s infinite linear;
-    }
-    
-    @keyframes float-particle {
-        0% {
-            transform: translateY(100vh) translateX(0) rotate(0deg);
-            opacity: 0;
-        }
-        10% {
-            opacity: 1;
-        }
-        90% {
-            opacity: 1;
-        }
-        100% {
-            transform: translateY(-100vh) translateX(100px) rotate(360deg);
-            opacity: 0;
-        }
-    }
-</style>
-
-<div class="relative min-h-screen overflow-hidden">
-    <!-- Animated Background Particles -->
-    <div class="particles-container" id="particles"></div>
-    
+<div class="bg-gradient-to-br from-blue-50 via-white to-purple-50">
     <!-- Hero Section -->
-    <section class="hero-gradient text-white pt-24 pb-20 relative overflow-hidden">
-        <div class="hero-pattern absolute inset-0"></div>
-        
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center">
-                <div class="relative inline-block mb-8">
-                    <div class="w-24 h-24 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center shadow-lg floating mx-auto">
-                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                        </svg>
-                    </div>
-                    <div class="pulse-ring"></div>
-                </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+        <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mx-auto mb-8 flex items-center justify-center shadow-lg">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+            </div>
+            
+            <h1 class="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
+                Share Your
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    Feedback
+                </span>
+            </h1>
+            
+            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+                Your voice matters. Help us improve by sharing your thoughts, experiences, and suggestions. 
+                Our secure platform ensures your feedback reaches the right people.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="{{ url_for('feedback.submit') }}" 
+                   class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span>Submit Feedback</span>
+                </a>
                 
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                    Share Your
-                    <span class="text-gradient bg-clip-text bg-gradient-to-r from-blue-200 to-purple-200">Feedback</span>
-                    <span class="security-badge"></span>
-                </h1>
-                
-                <p class="text-xl text-blue-100 mb-10 max-w-3xl mx-auto leading-relaxed">
-                    Your voice matters. Help us improve by sharing your thoughts, experiences, and suggestions. 
-                    Our secure platform ensures your feedback reaches the right people.
-                </p>
-                
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <a href="{{ url_for('feedback.submit') }}" 
-                       class="btn-primary bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200 flex items-center space-x-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        <span>Submit Feedback</span>
-                    </a>
-                    
-                    <a href="{{ url_for('main.channels') }}" 
-                       class="border border-white border-opacity-30 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:bg-opacity-10 transition-all duration-200 flex items-center space-x-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h8V4a2 2 0 012 2z"></path>
-                        </svg>
-                        <span>Join Our Channels</span>
-                    </a>
-                </div>
+                <a href="{{ url_for('main.channels') }}" 
+                   class="border border-gray-300 text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h8V4a2 2 0 012 2z"></path>
+                    </svg>
+                    <span>Join Our Channels</span>
+                </a>
             </div>
         </div>
-        
-        <!-- Animated scroll indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-            <div class="w-6 h-10 border-2 border-white border-opacity-50 rounded-full flex justify-center">
-                <div class="w-1 h-3 bg-white rounded-full mt-2 animate-bounce"></div>
-            </div>
-        </div>
-    </section>
+    </div>
 
     <!-- Features Section -->
-    <section class="py-20 bg-white relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Platform?</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Built with security, privacy, and user experience at its core
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Platform?</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Built with security, privacy, and user experience at its core
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Secure & Private</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Your data is protected with enterprise-grade security. All communications are encrypted and your privacy is our priority.
                 </p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="feature-card bg-white rounded-2xl p-8 shadow-lg border border-gray-100 fade-in">
-                    <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Secure & Private</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Your data is protected with end-to-end encryption and enterprise-grade security measures. We never share your information with third parties.
-                    </p>
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
                 </div>
-                
-                <div class="feature-card bg-white rounded-2xl p-8 shadow-lg border border-gray-100 fade-in">
-                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Lightning Fast</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Submit feedback in seconds with our streamlined process. Real-time validation and instant submission ensure your message reaches us immediately.
-                    </p>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Lightning Fast</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Submit feedback in seconds. Our streamlined process ensures your message reaches us immediately without any hassle.
+                </p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+                <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                    </svg>
                 </div>
-                
-                <div class="feature-card bg-white rounded-2xl p-8 shadow-lg border border-gray-100 fade-in">
-                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Direct Response</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Get personalized responses from our team. We read every piece of feedback and reply personally to address your concerns and suggestions.
-                    </p>
-                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Direct Response</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Get responses directly from our team. We read every feedback and reply personally to address your concerns.
+                </p>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Quick Feedback Section -->
-    <section class="py-16 bg-dots relative">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-10 text-center text-white shadow-2xl transform hover:scale-[1.02] transition-all duration-300">
-                <h3 class="text-2xl font-bold mb-4">Quick Feedback</h3>
-                <p class="text-blue-100 mb-6">Have something to say? Share it with us right now!</p>
-                <button onclick="openFeedbackModal()" 
-                        class="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors duration-200 transform hover:-translate-y-1">
-                    Send Quick Feedback
-                </button>
-            </div>
+    <!-- Quick Feedback Modal Trigger -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-center text-white">
+            <h3 class="text-2xl font-bold mb-4">Quick Feedback</h3>
+            <p class="text-blue-100 mb-6">Have something to say? Share it with us right now!</p>
+            <button onclick="openFeedbackModal()" 
+                    class="bg-white text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors duration-200">
+                Send Quick Feedback
+            </button>
         </div>
-    </section>
+    </div>
 
     <!-- Statistics Section -->
-    <section class="py-20 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div class="fade-in">
-                    <div class="text-4xl font-bold text-gray-900 mb-2 stat-number" data-target="100">0</div>
+                <div>
+                    <div class="text-3xl font-bold text-gray-900 mb-2">100+</div>
                     <div class="text-gray-600">Feedback Received</div>
                 </div>
-                <div class="fade-in">
-                    <div class="text-4xl font-bold text-gray-900 mb-2 stat-number" data-target="24">0</div>
-                    <div class="text-gray-600">Avg Response Time (hrs)</div>
+                <div>
+                    <div class="text-3xl font-bold text-gray-900 mb-2">24h</div>
+                    <div class="text-gray-600">Average Response</div>
                 </div>
-                <div class="fade-in">
-                    <div class="text-4xl font-bold text-gray-900 mb-2 stat-number" data-target="50">0</div>
+                <div>
+                    <div class="text-3xl font-bold text-gray-900 mb-2">50+</div>
                     <div class="text-gray-600">Happy Users</div>
                 </div>
-                <div class="fade-in">
-                    <div class="text-4xl font-bold text-gray-900 mb-2 stat-number" data-target="99.9">0</div>
-                    <div class="text-gray-600">Uptime %</div>
+                <div>
+                    <div class="text-3xl font-bold text-gray-900 mb-2">99.9%</div>
+                    <div class="text-gray-600">Uptime</div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Security Badges Section -->
-    <section class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h3 class="text-2xl font-bold text-gray-900 mb-8">Trusted & Secure</h3>
-            <div class="flex flex-wrap justify-center gap-8">
-                <div class="flex items-center bg-green-50 px-4 py-2 rounded-full">
-                    <span class="text-green-600 mr-2">🔒</span>
-                    <span class="text-green-800">End-to-End Encryption</span>
-                </div>
-                <div class="flex items-center bg-blue-50 px-4 py-2 rounded-full">
-                    <span class="text-blue-600 mr-2">🛡️</span>
-                    <span class="text-blue-800">GDPR Compliant</span>
-                </div>
-                <div class="flex items-center bg-purple-50 px-4 py-2 rounded-full">
-                    <span class="text-purple-600 mr-2">✓</span>
-                    <span class="text-purple-800">No Third-Party Sharing</span>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
 </div>
 
 <!-- Quick Feedback Modal -->
-<div id="feedbackModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300" onclick="closeFeedbackModal(event)">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 modal-enter" onclick="event.stopPropagation()">
+<div id="feedbackModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4" onclick="closeFeedbackModal(event)">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 transform transition-all duration-300 scale-95" onclick="event.stopPropagation()">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-xl font-semibold text-gray-900">Quick Feedback</h3>
-            <button onclick="closeFeedbackModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <button onclick="closeFeedbackModal()" class="text-gray-400 hover:text-gray-600">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         </div>
         
-        <form action="{{ url_for('feedback.submit') }}" method="POST" id="feedbackForm">
+        <form action="{{ url_for('feedback.submit') }}" method="POST">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="space-y-4">
                 <div>
                     <label for="quick_message" class="block text-sm font-medium text-gray-700 mb-2">Your Message</label>
                     <textarea name="message" id="quick_message" rows="4" required
-                              class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200"
+                              class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                               placeholder="What's on your mind?"></textarea>
                 </div>
                 
                 <div>
                     <label for="quick_email" class="block text-sm font-medium text-gray-700 mb-2">Email (optional)</label>
                     <input type="email" name="email" id="quick_email"
-                           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            placeholder="your@email.com">
                 </div>
                 
                 <!-- Honeypot field -->
                 <input type="text" name="website" style="display: none;">
-                
-                <!-- Security check -->
-                <div class="bg-blue-50 p-3 rounded-lg text-sm text-blue-800 flex items-start">
-                    <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                    </svg>
-                    <span>Your feedback is encrypted and secure. We value your privacy.</span>
-                </div>
             </div>
             
             <div class="flex space-x-3 mt-6">
                 <button type="button" onclick="closeFeedbackModal()"
-                        class="flex-1 border border-gray-300 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-200">
+                        class="flex-1 border border-gray-300 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors">
                     Cancel
                 </button>
-                <button type="submit" id="submitBtn"
-                        class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-200 relative overflow-hidden">
-                    <span class="relative z-10">Send Feedback</span>
+                <button type="submit"
+                        class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-medium hover:shadow-lg transition-all">
+                    Send Feedback
                 </button>
             </div>
         </form>
@@ -432,79 +178,12 @@
 </div>
 
 <script>
-// Create animated particles
-function createParticles() {
-    const container = document.getElementById('particles');
-    const colors = ['rgba(255, 255, 255, 0.3)', 'rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.4)'];
-    
-    for (let i = 0; i < 30; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        // Random properties
-        const size = Math.random() * 5 + 2;
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        const left = Math.random() * 100;
-        const animationDuration = Math.random() * 15 + 10;
-        const animationDelay = Math.random() * 5;
-        
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.backgroundColor = color;
-        particle.style.left = `${left}%`;
-        particle.style.top = `${Math.random() * 100}%`;
-        particle.style.animationDuration = `${animationDuration}s`;
-        particle.style.animationDelay = `${animationDelay}s`;
-        
-        container.appendChild(particle);
-    }
-}
-
-// Animate statistics numbers
-function animateValue(el, start, end, duration) {
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        const value = Math.floor(progress * (end - start) + start);
-        el.textContent = end >= 100 ? value + '+' : value;
-        if (progress < 1) {
-            window.requestAnimationFrame(step);
-        }
-    };
-    window.requestAnimationFrame(step);
-}
-
-// Animate elements on scroll
-function checkScroll() {
-    const elements = document.querySelectorAll('.fade-in');
-    const windowHeight = window.innerHeight;
-    
-    elements.forEach(element => {
-        const positionFromTop = element.getBoundingClientRect().top;
-        
-        if (positionFromTop - windowHeight <= -100) {
-            element.classList.add('visible');
-            
-            // Animate numbers if it's a stat element
-            if (element.querySelector('.stat-number')) {
-                const numberEl = element.querySelector('.stat-number');
-                const target = parseInt(numberEl.getAttribute('data-target'));
-                if (!numberEl.classList.contains('animated')) {
-                    animateValue(numberEl, 0, target, 2000);
-                    numberEl.classList.add('animated');
-                }
-            }
-        }
-    });
-}
-
-// Modal functions
 function openFeedbackModal() {
     const modal = document.getElementById('feedbackModal');
     modal.classList.remove('hidden');
     setTimeout(() => {
-        modal.classList.add('modal-enter');
+        modal.querySelector('.bg-white').classList.remove('scale-95');
+        modal.querySelector('.bg-white').classList.add('scale-100');
     }, 10);
 }
 
@@ -512,44 +191,11 @@ function closeFeedbackModal(event) {
     if (event && event.target !== event.currentTarget) return;
     
     const modal = document.getElementById('feedbackModal');
-    modal.classList.remove('modal-enter');
-    modal.classList.add('modal-leave');
+    modal.querySelector('.bg-white').classList.remove('scale-100');
+    modal.querySelector('.bg-white').classList.add('scale-95');
     setTimeout(() => {
         modal.classList.add('hidden');
-        modal.classList.remove('modal-leave');
-    }, 200);
+    }, 300);
 }
-
-// Initialize everything when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    createParticles();
-    window.addEventListener('scroll', checkScroll);
-    checkScroll(); // Check on initial load
-    
-    // Add animation to submit button
-    const submitBtn = document.getElementById('submitBtn');
-    if (submitBtn) {
-        submitBtn.addEventListener('mouseover', function() {
-            this.style.transform = 'translateY(-2px)';
-        });
-        
-        submitBtn.addEventListener('mouseout', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    }
-    
-    // Add form validation
-    const feedbackForm = document.getElementById('feedbackForm');
-    if (feedbackForm) {
-        feedbackForm.addEventListener('submit', function(e) {
-            const message = document.getElementById('quick_message').value.trim();
-            if (message.length < 10) {
-                e.preventDefault();
-                alert('Please provide more detailed feedback (at least 10 characters)');
-                document.getElementById('quick_message').focus();
-            }
-        });
-    }
-});
 </script>
 {% endblock %}

@@ -2,14 +2,137 @@ from flask import render_template, request, flash, redirect, url_for, current_ap
 from flask_login import login_user, logout_user, current_user
 from app.auth import bp
 from app.models import User
-from app import db, limiter
+from app import db, limiter, oauth
 from app.email_service import send_verification_email, send_otp_email, send_password_reset_email
 from datetime import datetime
 import secrets
 import string
+import requests
+
+@bp.route('/google')
+def google_login():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    
+    redirect_uri = url_for('auth.google_callback', _external=True)
+    return oauth.google.authorize_redirect(redirect_uri)
+
+@bp.route('/google/callback')
+def google_callback():
+    try:
+        token = oauth.google.authorize_access_token()
+        user_info = token.get('userinfo')
+        
+        if user_info:
+            email = user_info['email']
+            name = user_info['name']
+            oauth_id = user_info['sub']
+            avatar_url = user_info.get('picture')
+            
+            # Check if user exists
+            user = User.query.filter_by(email=email).first()
+            
+            if not user:
+                # Create new user
+                username = email.split('@')[0]
+                # Ensure unique username
+                counter = 1
+                original_username = username
+                while User.query.filter_by(username=username).first():
+                    username = f"{original_username}{counter}"
+                    counter += 1
+                
+                user = User.create_oauth_user(email, username, 'google', oauth_id, avatar_url)
+                db.session.add(user)
+                db.session.commit()
+                flash('Account created successfully with Google!', 'success')
+            else:
+                # Update OAuth info if needed
+                if not user.oauth_provider:
+                    user.oauth_provider = 'google'
+                    user.oauth_id = str(oauth_id)
+                    user.avatar_url = avatar_url
+                    db.session.commit()
+            
+            user.last_login = datetime.utcnow()
+            db.session.commit()
+            login_user(user, remember=True)
+            
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('main.index'))
+        
+    except Exception as e:
+        current_app.logger.error(f"Google OAuth error: {str(e)}")
+        flash('Google login failed. Please try again.', 'error')
+    
+    return redirect(url_for('auth.login'))
+
+@bp.route('/github')
+def github_login():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    
+    redirect_uri = url_for('auth.github_callback', _external=True)
+    return oauth.github.authorize_redirect(redirect_uri)
+
+@bp.route('/github/callback')
+def github_callback():
+    try:
+        token = oauth.github.authorize_access_token()
+        
+        # Get user info from GitHub API
+        resp = oauth.github.get('user', token=token)
+        user_info = resp.json()
+        
+        # Get user email (might be private)
+        email_resp = oauth.github.get('user/emails', token=token)
+        emails = email_resp.json()
+        primary_email = next((email['email'] for email in emails if email['primary']), None)
+        
+        if user_info and primary_email:
+            email = primary_email
+            username = user_info['login']
+            oauth_id = user_info['id']
+            avatar_url = user_info.get('avatar_url')
+            
+            # Check if user exists
+            user = User.query.filter_by(email=email).first()
+            
+            if not user:
+                # Ensure unique username
+                counter = 1
+                original_username = username
+                while User.query.filter_by(username=username).first():
+                    username = f"{original_username}{counter}"
+                    counter += 1
+                
+                user = User.create_oauth_user(email, username, 'github', oauth_id, avatar_url)
+                db.session.add(user)
+                db.session.commit()
+                flash('Account created successfully with GitHub!', 'success')
+            else:
+                # Update OAuth info if needed
+                if not user.oauth_provider:
+                    user.oauth_provider = 'github'
+                    user.oauth_id = str(oauth_id)
+                    user.avatar_url = avatar_url
+                    db.session.commit()
+            
+            user.last_login = datetime.utcnow()
+            db.session.commit()
+            login_user(user, remember=True)
+            
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('main.index'))
+        
+    except Exception as e:
+        current_app.logger.error(f"GitHub OAuth error: {str(e)}")
+        flash('GitHub login failed. Please try again.', 'error')
+    
+    return redirect(url_for('auth.login'))
 
 @bp.route('/register', methods=['GET', 'POST'])
-# @limiter.limit("5 per minute")
+@limiter.limit("5 per minute")
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -98,7 +221,7 @@ def resend_otp(user_id):
     return redirect(url_for('auth.verify_email', user_id=user.id))
 
 @bp.route('/login', methods=['GET', 'POST'])
-# @limiter.limit("100 per minute")
+@limiter.limit("10 per minute")
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))

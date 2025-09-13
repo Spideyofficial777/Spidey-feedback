@@ -8,6 +8,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from dotenv import load_dotenv
+from authlib.integrations.flask_client import OAuth
 
 load_dotenv()
 
@@ -21,6 +22,7 @@ limiter = Limiter(
     key_func=get_remote_address,
     default_limits=["200 per day", "50 per hour"]
 )
+oauth = OAuth()
 
 def create_app():
     app = Flask(__name__)
@@ -50,6 +52,28 @@ def create_app():
     migrate.init_app(app, db)
     csrf.init_app(app)
     limiter.init_app(app)
+    oauth.init_app(app)
+    
+    # Configure OAuth providers
+    oauth.register(
+        name='google',
+        client_id=os.environ.get('GOOGLE_CLIENT_ID'),
+        client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
+        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+        client_kwargs={
+            'scope': 'openid email profile'
+        }
+    )
+    
+    oauth.register(
+        name='github',
+        client_id=os.environ.get('GITHUB_CLIENT_ID'),
+        client_secret=os.environ.get('GITHUB_CLIENT_SECRET'),
+        access_token_url='https://github.com/login/oauth/access_token',
+        authorize_url='https://github.com/login/oauth/authorize',
+        api_base_url='https://api.github.com/',
+        client_kwargs={'scope': 'user:email'},
+    )
     
     # Login manager configuration
     login_manager.login_view = 'auth.login'
@@ -99,8 +123,9 @@ def create_app():
                 FormField(field_name='name', field_type='text', field_label='Name', is_required=False, order_index=1),
                 FormField(field_name='email', field_type='email', field_label='Email', is_required=False, order_index=2),
                 FormField(field_name='phone', field_type='tel', field_label='Phone', is_required=False, order_index=3),
-                FormField(field_name='message', field_type='textarea', field_label='Message', is_required=True, order_index=4),
-                FormField(field_name='rating', field_type='rating', field_label='Rating', is_required=False, order_index=5)
+                FormField(field_name='subject', field_type='select', field_label='Subject', field_options=['General Inquiry', 'Bug Report', 'Feature Request', 'Support'], is_required=True, order_index=4),
+                FormField(field_name='message', field_type='textarea', field_label='Message', is_required=True, order_index=5),
+                FormField(field_name='rating', field_type='rating', field_label='Rating', is_required=False, order_index=6)
             ]
             for field in default_fields:
                 db.session.add(field)

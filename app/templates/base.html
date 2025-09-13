@@ -39,12 +39,21 @@
                         <a href="{{ url_for('main.index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Home</a>
                         <a href="{{ url_for('feedback.submit') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Feedback</a>
                         <a href="{{ url_for('main.channels') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Channels</a>
-                        <a href="{{ url_for('main.about') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">About Spidey</a>
                         
                         {% if current_user.is_authenticated %}
                             {% if current_user.is_admin %}
                                 <a href="{{ url_for('admin.dashboard') }}" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition">Admin</a>
                             {% endif %}
+                            <div class="flex items-center space-x-2">
+                                {% if current_user.avatar_url %}
+                                    <img src="{{ current_user.avatar_url }}" alt="Profile" class="w-8 h-8 rounded-full border border-gray-200">
+                                {% else %}
+                                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-medium text-sm">{{ current_user.username[0].upper() }}</span>
+                                    </div>
+                                {% endif %}
+                                <span class="text-gray-700 text-sm font-medium">{{ current_user.username }}</span>
+                            </div>
                             <a href="{{ url_for('auth.logout') }}" class="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition">Logout</a>
                         {% else %}
                             <a href="{{ url_for('auth.login') }}" class="text-blue-600 hover:text-blue-800 px-3 py-2 rounded-md text-sm font-medium transition">Login</a>
