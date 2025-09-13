@@ -7,89 +7,323 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="https://i.ibb.co/HcrSWMV/cropped-circle-image.png">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { 
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom right, #f0f9ff, #e0f2fe);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
         .star-rating { cursor: pointer; }
-        .star-rating .star { transition: color 0.2s; }
-        .star-rating .star.active { color: #fbbf24; }
-        .star-rating .star:hover { color: #fbbf24; }
+        .star-rating .star { transition: all 0.2s; }
+        .star-rating .star.active { color: #fbbf24; transform: scale(1.1); }
+        .star-rating .star:hover { color: #fbbf24; transform: scale(1.2); }
         .toast { animation: slideIn 0.3s ease-out; }
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
+        .nav-gradient {
+            background: linear-gradient(90deg, #4F46E5 0%, #7C3AED 100%);
+        }
+        .nav-item {
+            position: relative;
+        }
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s ease;
+        }
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+            width: 0%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .profile-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .menu-overlay {
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
+<body class="min-h-screen">
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menuOverlay" class="menu-overlay fixed inset-0 z-40 lg:hidden"></div>
+
+    <!-- Enhanced Navigation -->
+    <nav class="nav-gradient shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <a href="{{ url_for('main.index') }}" class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">SF</span>
-                        </div>
-                        <span class="text-xl font-bold text-gray-900">{{ config.APP_NAME }}</span>
+                        <img src="https://i.ibb.co/HcrSWMV/cropped-circle-image.png" alt="Logo" class="w-8 h-8 rounded-lg">
+                        <span class="text-xl font-bold text-white">{{ config.APP_NAME }}</span>
                     </a>
                 </div>
                 
-                <div class="hidden md:block">
-                    <div class="flex items-center space-x-4">
-                        <a href="{{ url_for('main.index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Home</a>
-                        <a href="{{ url_for('feedback.submit') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Feedback</a>
-                        <a href="{{ url_for('main.channels') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Channels</a>
-                        <a href="{{ url_for('main.about') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">About spidey</a>                      
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:block">
+                    <div class="flex items-center space-x-1">
+                        <a href="{{ url_for('main.index') }}" class="nav-item text-white hover:text-gray-200 px-4 py-2 rounded-md text-sm font-medium transition flex items-center">
+                            <i class="fas fa-home mr-2"></i> Home
+                        </a>
+                        <a href="{{ url_for('feedback.submit') }}" class="nav-item text-white hover:text-gray-200 px-4 py-2 rounded-md text-sm font-medium transition flex items-center">
+                            <i class="fas fa-comment-dots mr-2"></i> Feedback
+                        </a>
+                        <a href="{{ url_for('main.channels') }}" class="nav-item text-white hover:text-gray-200 px-4 py-2 rounded-md text-sm font-medium transition flex items-center">
+                            <i class="fas fa-users mr-2"></i> Channels
+                        </a>
+                        <a href="{{ url_for('main.about') }}" class="nav-item text-white hover:text-gray-200 px-4 py-2 rounded-md text-sm font-medium transition flex items-center">
+                            <i class="fas fa-info-circle mr-2"></i> About
+                        </a>
 
                         {% if current_user.is_authenticated %}
-                            {% if current_user.is_admin %}
-                                <a href="{{ url_for('admin.dashboard') }}" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition">Admin</a>
-                            {% endif %}
-                            <div class="flex items-center space-x-2">
-                                {% if current_user.avatar_url %}
-                                    <img src="{{ current_user.avatar_url }}" alt="Profile" class="w-8 h-8 rounded-full border border-gray-200">
-                                {% else %}
-                                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                                        <span class="text-white font-medium text-sm">{{ current_user.username[0].upper() }}</span>
+                            <!-- User Dropdown -->
+                            <div class="dropdown relative ml-2">
+                                <button class="flex items-center text-sm text-white focus:outline-none">
+                                    {% if current_user.avatar_url %}
+                                        <img src="{{ current_user.avatar_url }}" alt="Profile" class="w-8 h-8 rounded-full border-2 border-white shadow-md">
+                                    {% else %}
+                                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+                                            <span class="text-white font-medium text-sm">{{ current_user.username[0].upper() }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <span class="ml-2 text-white font-medium">{{ current_user.username }}</span>
+                                    <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                                </button>
+                                
+                                <div class="dropdown-menu absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl py-2 z-50 border border-gray-200">
+                                    <div class="px-4 py-3 border-b border-gray-100">
+                                        <p class="text-sm font-medium text-gray-900">{{ current_user.username }}</p>
+                                        <p class="text-xs text-gray-500 truncate">{{ current_user.email }}</p>
                                     </div>
-                                {% endif %}
-                                <span class="text-gray-700 text-sm font-medium">{{ current_user.username }}</span>
+                                    
+                                    <a href="{{ url_for('main.index') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 transition">
+                                        <div class="w-9 h-9 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-user-circle text-purple-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Your Profile</p>
+                                            <p class="text-xs text-gray-500">View and edit your profile</p>
+                                        </div>
+                                    </a>
+                                    
+                                    <a href="{{ url_for('feedback.submit') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 transition">
+                                        <div class="w-9 h-9 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-history text-blue-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Feedback History</p>
+                                            <p class="text-xs text-gray-500">View your feedback submissions</p>
+                                        </div>
+                                    </a>
+                                    
+                                    <a href="{{ url_for('main.index') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 transition">
+                                        <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-cog text-green-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Settings</p>
+                                            <p class="text-xs text-gray-500">Manage your account settings</p>
+                                        </div>
+                                    </a>
+                                    
+                                    {% if current_user.is_admin %}
+                                        <div class="border-t border-gray-100 my-1"></div>
+                                        <a href="{{ url_for('admin.dashboard') }}" class="flex items-center px-4 py-3 text-sm text-purple-600 hover:bg-purple-50 transition">
+                                            <div class="w-9 h-9 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                                                <i class="fas fa-shield-alt"></i>
+                                            </div>
+                                            <div>
+                                                <p class="font-medium">Admin Dashboard</p>
+                                                <p class="text-xs text-purple-500">Manage system settings</p>
+                                            </div>
+                                        </a>
+                                    {% endif %}
+                                    
+                                    <div class="border-t border-gray-100 my-1"></div>
+                                    <a href="{{ url_for('auth.logout') }}" class="flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
+                                        <div class="w-9 h-9 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-sign-out-alt"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Logout</p>
+                                            <p class="text-xs text-red-500">Sign out of your account</p>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
-                            <a href="{{ url_for('auth.logout') }}" class="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition">Logout</a>
                         {% else %}
-                            <a href="{{ url_for('auth.login') }}" class="text-blue-600 hover:text-blue-800 px-3 py-2 rounded-md text-sm font-medium transition">Login</a>
-                            <a href="{{ url_for('auth.register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition">Register</a>
+                            <a href="{{ url_for('auth.login') }}" class="text-white hover:text-gray-200 px-4 py-2 rounded-md text-sm font-medium transition">
+                                <i class="fas fa-sign-in-alt mr-2"></i> Login
+                            </a>
+                            <a href="{{ url_for('auth.register') }}" class="bg-white text-purple-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition shadow-md">
+                                <i class="fas fa-user-plus mr-2"></i> Register
+                            </a>
                         {% endif %}
                     </div>
                 </div>
                 
                 <!-- Mobile menu button -->
-                <div class="md:hidden" x-data="{ open: false }">
-                    <button @click="open = !open" class="text-gray-700 hover:text-blue-600">
+                <div class="lg:hidden">
+                    <button id="mobileMenuButton" class="text-white p-2 rounded-md hover:bg-purple-700 focus:outline-none transition">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobileMenu" class="mobile-menu lg:hidden fixed inset-y-0 right-0 w-80 bg-white shadow-2xl z-50">
+            <div class="flex items-center justify-between p-5 border-b bg-gradient-to-r from-purple-600 to-blue-600">
+                <div class="flex items-center space-x-2">
+                    <img src="https://i.ibb.co/HcrSWMV/cropped-circle-image.png" alt="Logo" class="w-8 h-8 rounded-lg">
+                    <span class="text-xl font-bold text-white">{{ config.APP_NAME }}</span>
+                </div>
+                <button id="closeMobileMenu" class="text-white hover:text-gray-200 transition">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="p-5 overflow-y-auto h-full">
+                <div class="space-y-1">
+                    <a href="{{ url_for('main.index') }}" class="flex items-center p-4 text-gray-700 rounded-xl hover:bg-purple-50 transition">
+                        <i class="fas fa-home w-5 mr-4 text-center text-purple-600"></i> 
+                        <span class="font-medium">Home</span>
+                    </a>
+                    <a href="{{ url_for('feedback.submit') }}" class="flex items-center p-4 text-gray-700 rounded-xl hover:bg-blue-50 transition">
+                        <i class="fas fa-comment-dots w-5 mr-4 text-center text-blue-600"></i> 
+                        <span class="font-medium">Feedback</span>
+                    </a>
+                    <a href="{{ url_for('main.channels') }}" class="flex items-center p-4 text-gray-700 rounded-xl hover:bg-green-50 transition">
+                        <i class="fas fa-users w-5 mr-4 text-center text-green-600"></i> 
+                        <span class="font-medium">Channels</span>
+                    </a>
+                    <a href="{{ url_for('main.about') }}" class="flex items-center p-4 text-gray-700 rounded-xl hover:bg-orange-50 transition">
+                        <i class="fas fa-info-circle w-5 mr-4 text-center text-orange-600"></i> 
+                        <span class="font-medium">About</span>
+                    </a>
                     
-                    <!-- Mobile menu -->
-                    <div x-show="open" @click.away="open = false" class="absolute top-16 right-4 bg-white rounded-lg shadow-lg py-2 w-48 z-50">
-                        <a href="{{ url_for('main.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Home</a>
-                        <a href="{{ url_for('feedback.submit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Feedback</a>
-                        <a href="{{ url_for('main.channels') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Channels</a>
-                        transition">Channels</a>
-                        <a href="{{ url_for('main.about') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">About spidey</a>
-                        
-                        {% if current_user.is_authenticated %}
-                            {% if current_user.is_admin %}
-                                <a href="{{ url_for('admin.dashboard') }}" class="block px-4 py-2 text-purple-600 hover:bg-gray-100">Admin</a>
+                    <div class="border-t border-gray-200 my-3"></div>
+                    
+                    {% if current_user.is_authenticated %}
+                        <div class="p-4 flex items-center bg-gray-50 rounded-xl">
+                            {% if current_user.avatar_url %}
+                                <img src="{{ current_user.avatar_url }}" alt="Profile" class="w-12 h-12 rounded-full border-2 border-white shadow-md">
+                            {% else %}
+                                <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+                                    <span class="text-white font-medium text-lg">{{ current_user.username[0].upper() }}</span>
+                                </div>
                             {% endif %}
-                            <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-red-600 hover:bg-gray-100">Logout</a>
-                        {% else %}
-                            <a href="{{ url_for('auth.login') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Login</a>
-                            <a href="{{ url_for('auth.register') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Register</a>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900">{{ current_user.username }}</p>
+                                <p class="text-xs text-gray-500">Premium Member</p>
+                            </div>
+                        </div>
+                        
+                        <a href="{{ url_for('main.index') }}" class="flex items-center p-4 text-gray-700 rounded-xl hover:bg-purple-50 transition">
+                            <i class="fas fa-user-circle w-5 mr-4 text-center text-purple-600"></i> 
+                            <span class="font-medium">Your Profile</span>
+                        </a>
+                        <a href="{{ url_for('feedback.submit') }}" class="flex items-center p-4 text-gray-700 rounded-xl hover:bg-blue-50 transition">
+                            <i class="fas fa-history w-5 mr-4 text-center text-blue-600"></i> 
+                            <span class="font-medium">Feedback History</span>
+                        </a>
+                        <a href="{{ url_for('main.index') }}" class="flex items-center p-4 text-gray-700 rounded-xl hover:bg-green-50 transition">
+                            <i class="fas fa-cog w-5 mr-4 text-center text-green-600"></i> 
+                            <span class="font-medium">Settings</span>
+                        </a>
+                        
+                        {% if current_user.is_admin %}
+                            <div class="border-t border-gray-200 my-3"></div>
+                            <a href="{{ url_for('admin.dashboard') }}" class="flex items-center p-4 text-purple-600 rounded-xl hover:bg-purple-50 transition">
+                                <i class="fas fa-shield-alt w-5 mr-4 text-center"></i> 
+                                <span class="font-medium">Admin Dashboard</span>
+                            </a>
                         {% endif %}
-                    </div>
+                        
+                        <div class="border-t border-gray-200 my-3"></div>
+                        <a href="{{ url_for('auth.logout') }}" class="flex items-center p-4 text-red-600 rounded-xl hover:bg-red-50 transition">
+                            <i class="fas fa-sign-out-alt w-5 mr-4 text-center"></i> 
+                            <span class="font-medium">Logout</span>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="flex items-center p-4 text-blue-600 rounded-xl hover:bg-blue-50 transition">
+                            <i class="fas fa-sign-in-alt w-5 mr-4 text-center"></i> 
+                            <span class="font-medium">Login</span>
+                        </a>
+                        <a href="{{ url_for('auth.register') }}" class="flex items-center p-4 text-white rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition mt-2">
+                            <i class="fas fa-user-plus w-5 mr-4 text-center"></i> 
+                            <span class="font-medium">Register</span>
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <div class="absolute bottom-0 left-0 right-0 p-5 border-t border-gray-200 bg-white">
+                    <p class="text-xs text-gray-500 text-center">&copy; 2025 {{ config.APP_NAME }}</p>
                 </div>
             </div>
         </div>
@@ -162,26 +396,39 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white mt-16">
+    <!-- Enhanced Footer -->
+    <footer class="bg-gray-900 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">SF</span>
-                        </div>
+                        <img src="https://i.ibb.co/HcrSWMV/cropped-circle-image.png" alt="Logo" class="w-8 h-8 rounded-lg">
                         <span class="text-xl font-bold">{{ config.APP_NAME }}</span>
                     </div>
                     <p class="text-gray-300 max-w-md">Your feedback matters to us. Help us improve by sharing your thoughts and experiences.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-300 hover:text-white transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
                 </div>
                 
                 <div>
                     <h3 class="font-semibold mb-4">Quick Links</h3>
                     <ul class="space-y-2 text-gray-300">
-                        <li><a href="{{ url_for('main.index') }}" class="hover:text-white transition">Home</a></li>
-                        <li><a href="{{ url_for('feedback.submit') }}" class="hover:text-white transition">Submit Feedback</a></li>
-                        <li><a href="{{ url_for('main.channels') }}" class="hover:text-white transition">Join Channels</a></li>
+                        <li><a href="{{ url_for('main.index') }}" class="hover:text-white transition flex items-center"><i class="fas fa-arrow-right mr-2 text-xs"></i> Home</a></li>
+                        <li><a href="{{ url_for('feedback.submit') }}" class="hover:text-white transition flex items-center"><i class="fas fa-arrow-right mr-2 text-xs"></i> Submit Feedback</a></li>
+                        <li><a href="{{ url_for('main.channels') }}" class="hover:text-white transition flex items-center"><i class="fas fa-arrow-right mr-2 text-xs"></i> Join Channels</a></li>
+                        <li><a href="{{ url_for('main.about') }}" class="hover:text-white transition flex items-center"><i class="fas fa-arrow-right mr-2 text-xs"></i> About Us</a></li>
                     </ul>
                 </div>
                 
@@ -189,26 +436,39 @@
                     <h3 class="font-semibold mb-4">Account</h3>
                     <ul class="space-y-2 text-gray-300">
                         {% if current_user.is_authenticated %}
+                            <li><a href="{{ url_for('main.index') }}" class="hover:text-white transition flex items-center"><i class="fas fa-arrow-right mr-2 text-xs"></i> Your Profile</a></li>
+                            <li><a href="{{ url_for('feedback.submit') }}" class="hover:text-white transition flex items-center"><i class="fas fa-arrow-right mr-2 text-xs"></i> Feedback History</a></li>
                             {% if current_user.is_admin %}
-                                <li><a href="{{ url_for('admin.dashboard') }}" class="hover:text-white transition">Admin Panel</a></li>
+                                <li><a href="{{ url_for('admin.dashboard') }}" class="hover:text-white transition flex items-center"><i class="fas fa-arrow-right mr-2 text-xs"></i> Admin Panel</a></li>
                             {% endif %}
-                            <li><a href="{{ url_for('auth.logout') }}" class="hover:text-white transition">Logout</a></li>
+                            <li><a href="{{ url_for('auth.logout') }}" class="hover:text-white transition flex items-center"><i class="fas fa-arrow-right mr-2 text-xs"></i> Logout</a></li>
                         {% else %}
-                            <li><a href="{{ url_for('auth.login') }}" class="hover:text-white transition">Login</a></li>
-                            <li><a href="{{ url_for('auth.register') }}" class="hover:text-white transition">Register</a></li>
+                            <li><a href="{{ url_for('auth.login') }}" class="hover:text-white transition flex items-center"><i class="fas fa-arrow-right mr-2 text-xs"></i> Login</a></li>
+                            <li><a href="{{ url_for('auth.register') }}" class="hover:text-white transition flex items-center"><i class="fas fa-arrow-right mr-2 text-xs"></i> Register</a></li>
                         {% endif %}
                     </ul>
                 </div>
             </div>
             
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-300">
-                <p>&copy; 2025 {{ config.APP_NAME }}. All rights reserved.</p>
+            <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-300 text-sm">&copy; 2025 {{ config.APP_NAME }}. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-300 hover:text-white text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-300 hover:text-white text-sm">Terms of Service</a>
+                    <a href="#" class="text-gray-300 hover:text-white text-sm">Contact</a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Star Rating Script -->
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="fixed bottom-6 right-6 bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition opacity-0 invisible">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Enhanced Scripts -->
     <script>
+        // Initialize star rating
         function initStarRating() {
             const ratings = document.querySelectorAll('.star-rating');
             ratings.forEach(rating => {
@@ -247,7 +507,78 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', initStarRating);
+        // Mobile menu functionality - FIXED
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const closeMobileMenu = document.getElementById('closeMobileMenu');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            
+            function openMenu() {
+                mobileMenu.classList.add('open');
+                menuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeMenu() {
+                mobileMenu.classList.remove('open');
+                menuOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            
+            mobileMenuButton.addEventListener('click', openMenu);
+            closeMobileMenu.addEventListener('click', closeMenu);
+            menuOverlay.addEventListener('click', closeMenu);
+            
+            // Close menu when clicking on a link (FIXED)
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+            
+            // Initialize other components
+            initStarRating();
+            initProgressBar();
+            initBackToTop();
+        });
+
+        // Progress bar functionality
+        function initProgressBar() {
+            const progressBar = document.getElementById('progressBar');
+            
+            window.addEventListener('scroll', () => {
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight - windowHeight;
+                const scrollPosition = window.scrollY;
+                const progress = (scrollPosition / documentHeight) * 100;
+                
+                progressBar.style.width = progress + '%';
+            });
+        }
+
+        // Back to top button functionality
+        function initBackToTop() {
+            const backToTopButton = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible');
+                    backToTopButton.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopButton.classList.remove('opacity-100', 'visible');
+                    backToTopButton.classList.add('opacity-0', 'invisible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
     </script>
+    
+    {% block scripts %}{% endblock %}
 </body>
 </html>

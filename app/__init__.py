@@ -9,6 +9,8 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from dotenv import load_dotenv
 from authlib.integrations.flask_client import OAuth
+from app.user import bp as user_bp
+
 
 load_dotenv()
 
@@ -39,6 +41,7 @@ def create_app():
     app.config['MAIL_USERNAME'] = os.environ.get('SMTP_EMAIL')
     app.config['MAIL_PASSWORD'] = os.environ.get('SMTP_PASSWORD')
     app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('SMTP_EMAIL')
+    app.register_blueprint(user_bp, url_prefix='/user')
     
     # App specific config
     app.config['APP_NAME'] = os.environ.get('APP_NAME', 'Spidey Feedback')

@@ -9,13 +9,17 @@ import secrets
 import string
 import requests
 
+
 @bp.route('/google')
 def google_login():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     
     redirect_uri = url_for('auth.google_callback', _external=True)
+    print("Redirect URI being used:", redirect_uri)  # <-- Debug print here
+    
     return oauth.google.authorize_redirect(redirect_uri)
+
 
 @bp.route('/google/callback')
 def google_callback():
@@ -347,3 +351,4 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.index'))
+
