@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/HcrSWMV/cropped-circle-image.png">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .star-rating { cursor: pointer; }
@@ -39,7 +40,8 @@
                         <a href="{{ url_for('main.index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Home</a>
                         <a href="{{ url_for('feedback.submit') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Feedback</a>
                         <a href="{{ url_for('main.channels') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Channels</a>
-                        
+                        <a href="{{ url_for('main.about') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">About spidey</a>                      
+
                         {% if current_user.is_authenticated %}
                             {% if current_user.is_admin %}
                                 <a href="{{ url_for('admin.dashboard') }}" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition">Admin</a>
@@ -75,6 +77,8 @@
                         <a href="{{ url_for('main.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Home</a>
                         <a href="{{ url_for('feedback.submit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Feedback</a>
                         <a href="{{ url_for('main.channels') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Channels</a>
+                        transition">Channels</a>
+                        <a href="{{ url_for('main.about') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">About spidey</a>
                         
                         {% if current_user.is_authenticated %}
                             {% if current_user.is_admin %}
@@ -198,7 +202,7 @@
             </div>
             
             <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-300">
-                <p>&copy; 2024 {{ config.APP_NAME }}. All rights reserved.</p>
+                <p>&copy; 2025 {{ config.APP_NAME }}. All rights reserved.</p>
             </div>
         </div>
     </footer>

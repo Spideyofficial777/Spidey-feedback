@@ -14,3 +14,7 @@ def channels():
 @bp.route('/about')
 def about():
     return render_template('main/about.html')
+
+@bp.route('/support', endpoint='support_page')
+def about():
+    return render_template('main/support.html')

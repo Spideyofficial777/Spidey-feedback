@@ -1,154 +1,834 @@
 {% extends "base.html" %}
 
-{% block title %}About Us - {{ config.APP_NAME }}{% endblock %}
+
+{% block title %}{{ config.APP_NAME }} - Secure Feedback Platform{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <!-- Header -->
-    <div class="text-center mb-16">
-        <div class="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mx-auto mb-8 flex items-center justify-center shadow-lg">
-            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <title>About Us - FeedbackHub</title> -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #1f2937;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes float-particle {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) translateX(100px) rotate(360deg); }
+        }
+        
+        @keyframes spidey-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 131, 202, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 131, 202, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 131, 202, 0); }
+        }
+        
+        @keyframes glowing {
+            0% { background-position: 0 0; }
+            50% { background-position: 400% 0; }
+            100% { background-position: 0 0; }
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #667eea; }
+        }
+        
+        /* Utility Classes */
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(-45deg, #3b82f6, #8b5cf6, #6366f1, #a855f7);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .btn-hover {
+            transition: all 0.3s ease;
+            background-size: 200% auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-hover:hover {
+            background-position: right center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float-particle 15s infinite linear;
+            z-index: 0;
+        }
+        
+        .stagger-animation > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .stagger-animation.visible > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .stagger-animation.visible > *:nth-child(1) { transition-delay: 0.1s; }
+        .stagger-animation.visible > *:nth-child(2) { transition-delay: 0.2s; }
+        .stagger-animation.visible > *:nth-child(3) { transition-delay: 0.3s; }
+        .stagger-animation.visible > *:nth-child(4) { transition-delay: 0.4s; }
+        .stagger-animation.visible > *:nth-child(5) { transition-delay: 0.5s; }
+        .stagger-animation.visible > *:nth-child(6) { transition-delay: 0.6s; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #0063B2 0%, #D32F2F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .spidey-pulse {
+            animation: spidey-pulse 2s infinite;
+        }
+        
+        .hover-lift {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-5px);
+        }
+        
+        .telegram-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .floating-icon {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .glow-effect {
+            position: relative;
+        }
+        
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            z-index: -1;
+            border-radius: 16px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #ff6b6b);
+            background-size: 400%;
+            animation: glowing 20s linear infinite;
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .glow-effect:hover::after {
+            opacity: 0.7;
+        }
+        
+        .typewriter h2 {
+            overflow: hidden;
+            border-right: .15em solid #667eea;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        
+        /* Developer Section Styles */
+        .team-member {
+            transition: all 0.4s ease;
+            perspective: 1000px;
+        }
+        
+        .team-member-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        .team-member:hover .team-member-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .team-member-front, .team-member-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .team-member-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .developer-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #e2e8f0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+        }
+        
+        .team-member:hover .developer-img {
+            transform: scale(1.05);
+            border-color: #667eea;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Layout Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            width: 6rem;
+            height: 6rem;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            border-radius: 1.5rem;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.3);
+            animation: spidey-pulse 2s infinite;
+        }
+        
+        .logo-badge {
+            position: absolute;
+            bottom: -0.5rem;
+            right: -0.5rem;
+            background: white;
+            border-radius: 50%;
+            padding: 0.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badge-inner {
+            width: 2rem;
+            height: 2rem;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #0063B2 0%, #D32F2F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .mission-section {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid #e5e7eb;
+            position: relative;
+            z-index: 10;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .mission-section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-section {
+            background: linear-gradient(-45deg, #3b82f6, #8b5cf6, #6366f1, #a855f7);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 10;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stats-section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .contact-section {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            border: 1px solid #e5e7eb;
+            position: relative;
+            z-index: 10;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .contact-section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            border: 1px solid #d1d5db;
+            color: #374151;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f9fafb;
+            border-color: #9ca3af;
+        }
+        
+        /* Background Elements */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .particles-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Animated Background Elements -->
+        <div class="bg-elements">
+            <div class="bg-element" style="top: 10%; left: 10%; width: 5rem; height: 5rem; background-color: #93c5fd; animation-delay: 0s;"></div>
+            <div class="bg-element" style="top: 25%; right: 5%; width: 4rem; height: 4rem; background-color: #c4b5fd; animation-delay: 1.5s;"></div>
+            <div class="bg-element" style="bottom: 20%; left: 25%; width: 6rem; height: 6rem; background-color: #a5b4fc; animation-delay: 2.5s;"></div>
+            <div class="bg-element" style="bottom: 33%; right: 25%; width: 3rem; height: 3rem; background-color: #93c5fd; animation-delay: 3.5s;"></div>
         </div>
         
-        <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">About {{ config.APP_NAME }}</h1>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            We're dedicated to creating meaningful connections between users and organizations through secure, accessible feedback systems.
-        </p>
+        <!-- Animated Background Particles -->
+        <div id="particles-container" class="particles-container"></div>
+        
+        <!-- Header -->
+<header class="header">
+    <div class="logo-container">
+        <div class="logo">
+            <img src="https://i.ibb.co/Y7ckyvjm/cropped-circle-image.png" 
+                 alt="Logo" 
+                 style="width: 4.5rem; height: 4.5rem; border-radius: 50%; object-fit: cover;">
+        </div>
+        <div class="logo-badge">
+            <div class="badge-inner">
+                <i class="fas fa-plus text-xs text-white"></i>
+            </div>
+        </div>
     </div>
 
-    <!-- Mission Section -->
-    <div class="bg-white rounded-2xl shadow-xl p-8 mb-12 border border-gray-100">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div>
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">
-                    At {{ config.APP_NAME }}, we believe that every voice matters. Our platform is designed to bridge the gap between users and organizations, making it easier than ever to share thoughts, suggestions, and experiences.
-                </p>
-                <p class="text-gray-600 leading-relaxed">
-                    We're committed to providing a secure, user-friendly environment where feedback can flow freely and constructively, helping organizations improve and users feel heard.
-                </p>
-            </div>
-            <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-8">
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h1 class="fade-in">About FeedbackHub</h1>
+            <p class="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed fade-in" style="transition-delay: 0.2s;">
+                We're dedicated to creating meaningful connections between users and organizations through secure, accessible feedback systems.
+            </p>
+        </header>
+
+        <!-- Mission Section -->
+        <section class="mission-section glow-effect">
+            <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+                <div class="slide-in-left">
+                    <h2 style="font-size: 1.875rem; font-weight: 700; color: #111827; margin-bottom: 1.5rem;">Our Mission</h2>
+                    <p style="color: #4b5563; margin-bottom: 1rem; line-height: 1.625;">
+                        At FeedbackHub, we believe that every voice matters. Our platform is designed to bridge the gap between users and organizations, making it easier than ever to share thoughts, suggestions, and experiences.
+                    </p>
+                    <p style="color: #4b5563; line-height: 1.625;">
+                        We're committed to providing a secure, user-friendly environment where feedback can flow freely and constructively, helping organizations improve and users feel heard.
+                    </p>
+                </div>
+                <div style="background: linear-gradient(to bottom right, #dbeafe, #ede9fe); border-radius: 0.75rem; padding: 2rem; display: flex; flex-direction: column; align-items: center;" class="slide-in-right">
+                    <div style="width: 4rem; height: 4rem; background: linear-gradient(to right, #3b82f6, #8b5cf6); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;">
+                        <svg style="width: 2rem; height: 2rem; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Built with Care</h3>
-                    <p class="text-gray-600 text-sm">Every feature is crafted with user experience and security in mind.</p>
+                    <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">Built with Care</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem; text-align: center;">Every feature is crafted with user experience and security in mind.</p>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Features Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                </svg>
+        <!-- Features Grid -->
+        <div class="features-grid stagger-animation">
+            <div class="feature-card hover-lift">
+                <div class="feature-icon" style="background-color: #dbeafe; animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;">
+                    <svg style="width: 1.5rem; height: 1.5rem; color: #2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">Secure by Design</h3>
+                <p style="color: #4b5563; font-size: 0.875rem;">Enterprise-grade security with encrypted communications and privacy protection.</p>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Secure by Design</h3>
-            <p class="text-gray-600 text-sm">Enterprise-grade security with encrypted communications and privacy protection.</p>
-        </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
+            <div class="feature-card hover-lift">
+                <div class="feature-icon" style="background-color: #dcfce7; animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; animation-delay: 0.5s;">
+                    <svg style="width: 1.5rem; height: 1.5rem; color: #16a34a; animation-delay: 1.5s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">Lightning Fast</h3>
+                <p style="color: #4b5563; font-size: 0.875rem;">Optimized performance ensures your feedback reaches us instantly.</p>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Lightning Fast</h3>
-            <p class="text-gray-600 text-sm">Optimized performance ensures your feedback reaches us instantly.</p>
-        </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
-                </svg>
+            <div class="feature-card hover-lift">
+                <div class="feature-icon" style="background-color: #f3e8ff; animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; animation-delay: 1s;">
+                    <svg style="width: 1.5rem; height: 1.5rem; color: #7c3aed; animation-delay: 2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">Fully Responsive</h3>
+                <p style="color: #4b5563; font-size: 0.875rem;">Perfect experience across all devices, from mobile to desktop.</p>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Fully Responsive</h3>
-            <p class="text-gray-600 text-sm">Perfect experience across all devices, from mobile to desktop.</p>
-        </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-            <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
+            <div class="feature-card hover-lift">
+                <div class="feature-icon" style="background-color: #fef3c7; animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; animation-delay: 1.5s;">
+                    <svg style="width: 1.5rem; height: 1.5rem; color: #ca8a04; animation-delay: 2.5s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">24/7 Availability</h3>
+                <p style="color: #4b5563; font-size: 0.875rem;">Submit feedback anytime, anywhere. We're always here to listen.</p>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">24/7 Availability</h3>
-            <p class="text-gray-600 text-sm">Submit feedback anytime, anywhere. We're always here to listen.</p>
-        </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-            <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
-                </svg>
+            <div class="feature-card hover-lift">
+                <div class="feature-icon" style="background-color: #e0e7ff; animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; animation-delay: 2s;">
+                    <svg style="width: 1.5rem; height: 1.5rem; color: #4f46e5; animation-delay: 3s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">Direct Communication</h3>
+                <p style="color: #4b5563; font-size: 0.875rem;">Get personal responses from our team for important feedback.</p>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Direct Communication</h3>
-            <p class="text-gray-600 text-sm">Get personal responses from our team for important feedback.</p>
-        </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-            <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">User-Centric</h3>
-            <p class="text-gray-600 text-sm">Every decision we make prioritizes user experience and satisfaction.</p>
-        </div>
-    </div>
-
-    <!-- Team Section -->
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white text-center mb-12">
-        <h2 class="text-3xl font-bold mb-4">Our Commitment</h2>
-        <p class="text-blue-100 mb-6 max-w-2xl mx-auto leading-relaxed">
-            We're committed to continuous improvement based on your feedback. Every suggestion helps us build a better platform for everyone.
-        </p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            <div>
-                <div class="text-3xl font-bold mb-2">99.9%</div>
-                <div class="text-blue-100">Uptime Guarantee</div>
-            </div>
-            <div>
-                <div class="text-3xl font-bold mb-2">&lt;24h</div>
-                <div class="text-blue-100">Response Time</div>
-            </div>
-            <div>
-                <div class="text-3xl font-bold mb-2">100%</div>
-                <div class="text-blue-100">Privacy Protected</div>
+            <div class="feature-card hover-lift">
+                <div class="feature-icon" style="background-color: #fee2e2; animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; animation-delay: 2.5s;">
+                    <svg style="width: 1.5rem; height: 1.5rem; color: #dc2626; animation-delay: 3.5s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">User-Centric</h3>
+                <p style="color: #4b5563; font-size: 0.875rem;">Every decision we make prioritizes user experience and satisfaction.</p>
             </div>
         </div>
-    </div>
 
-    <!-- Contact Section -->
-    <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-        <div class="text-center">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">Get in Touch</h2>
-            <p class="text-gray-600 mb-8 max-w-2xl mx-auto">
-                Have questions about our platform or want to learn more? We'd love to hear from you.
+        <!-- Developer Section -->
+        <section style="margin-bottom: 3rem; position: relative; z-index: 10;">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="font-size: 1.875rem; font-weight: 700; color: #111827; margin-bottom: 1rem; overflow: hidden; border-right: .15em solid #667eea; white-space: nowrap; margin: 0 auto; letter-spacing: .15em; animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;">Meet Our Developer</h2>
+                <p style="color: #4b5563; max-width: 42rem; margin: 0 auto;" class="fade-in" style="transition-delay: 0.2s;">
+                    The creative mind behind FeedbackHub who brought this platform to life with passion and expertise.
+                </p>
+            </div>
+
+            <div style="display: flex; justify-content: center;">
+                <div class="team-member" style="width: 20rem; height: 24rem;">
+                    <div class="team-member-inner">
+                        <div class="team-member-front" style="background: white;">
+                            <img src="https://envs.sh/nyD.jpg" alt="Developer" class="developer-img" style="margin-bottom: 1.5rem;">
+                            <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 0.5rem;">Spidey Official</h3>
+                            <p style="color: #7c3aed; font-weight: 500; margin-bottom: 0.5rem;">Full Stack Developer</p>
+                            <p style="color: #4b5563; text-align: center;">Passionate about creating seamless user experiences and robust backend systems.</p>
+                        </div>
+                        <div class="team-member-back">
+                            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Skills & Expertise</h3>
+                            <ul style="font-size: 0.875rem; color: white; text-align: center; margin-bottom: 1.5rem;">
+                                <li style="margin-bottom: 0.25rem;">Python & Flask Development</li>
+                                <li style="margin-bottom: 0.25rem;">Frontend Technologies</li>
+                                <li style="margin-bottom: 0.25rem;">Database Design</li>
+                                <li style="margin-bottom: 0.25rem;">UI/UX Design</li>
+                                <li>DevOps & Deployment</li>
+                            </ul>
+                            <div class="social-links">
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section glow-effect">
+            <h2 style="font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem;" class="fade-in">Our Commitment</h2>
+            <p style="color: #dbeafe; margin-bottom: 1.5rem; max-width: 42rem; margin-left: auto; margin-right: auto; line-height: 1.625;" class="fade-in" style="transition-delay: 0.2s;">
+                We're committed to continuous improvement based on your feedback. Every suggestion helps us build a better platform for everyone.
             </p>
-            
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ url_for('feedback.submit') }}" 
-                   class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200">
-                    Send Us Feedback
-                </a>
-                
-                <a href="{{ url_for('main.channels') }}" 
-                   class="border border-gray-300 text-gray-700 px-8 py-3 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
-                    Join Our Community
-                </a>
+            <div class="stats-grid stagger-animation">
+                <div>
+                    <div class="stat-number" data-count="99.9">0</div>
+                    <div style="color: #dbeafe;">Uptime Guarantee</div>
+                </div>
+                <div>
+                    <div class="stat-number" data-count="24">&lt;0h</div>
+                    <div style="color: #dbeafe;">Response Time</div>
+                </div>
+                <div>
+                    <div class="stat-number" data-count="100">0</div>
+                    <div style="color: #dbeafe;">Privacy Protected</div>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section glow-effect">
+            <div style="text-align: center;">
+                <h2 style="font-size: 1.875rem; font-weight: 700; color: #111827; margin-bottom: 1rem;" class="fade-in">Get in Touch</h2>
+                <p style="color: #4b5563; margin-bottom: 2rem; max-width: 42rem; margin-left: auto; margin-right: auto;" class="fade-in" style="transition-delay: 0.2s;">
+                    Have questions about our platform or want to learn more? We'd love to hear from you.
+                </p>
+                
+                <div style="display: flex; flex-direction: column; gap: 1rem; justify-content: center; align-items: center;" class="fade-in" style="transition-delay: 0.4s;">
+                    <a href="#" class="btn btn-primary telegram-button">
+                        Send Us Feedback
+                    </a>
+                    
+                    <a href="#" class="btn btn-outline">
+                        Join Our Community
+                    </a>
+                </div>
+            </div>
+        </section>
     </div>
-</div>
+
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const colors = ['#3b82f6', '#8b5cf6', '#6366f1', '#a855f7'];
+            
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 20 + 5;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const animationDuration = Math.random() * 20 + 10;
+                const animationDelay = Math.random() * 5;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.backgroundColor = color;
+                particle.style.left = `${left}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDuration = `${animationDuration}s`;
+                particle.style.animationDelay = `${animationDelay}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Scroll animation for elements
+        function checkScroll() {
+            const elements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .stagger-animation');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // Animate statistics numbers
+        function animateNumbers() {
+            const statElements = document.querySelectorAll('.stat-number');
+            
+            statElements.forEach(element => {
+                const target = parseFloat(element.getAttribute('data-count'));
+                const duration = 2000; // 2 seconds
+                const steps = 60; // 60 frames
+                const stepValue = target / steps;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += stepValue;
+                    if (current >= target) {
+                        clearInterval(timer);
+                        if (element.textContent.startsWith('<')) {
+                            element.textContent = '<' + target + 'h';
+                        } else {
+                            element.textContent = target + (element.getAttribute('data-count').includes('.') ? '%' : '%');
+                        }
+                    } else {
+                        if (element.textContent.startsWith('<')) {
+                            element.textContent = '<' + Math.floor(current) + 'h';
+                        } else {
+                            element.textContent = Math.floor(current) + (element.getAttribute('data-count').includes('.') ? '%' : '%');
+                        }
+                    }
+                }, duration / steps);
+            });
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            window.addEventListener('scroll', checkScroll);
+            checkScroll(); // Check on initial load
+            
+            // Animate numbers when they come into view
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateNumbers();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            document.querySelectorAll('.stat-number').forEach(stat => {
+                observer.observe(stat.parentElement);
+            });
+        });
+    </script>
+</body>
+</html>
 {% endblock %}
